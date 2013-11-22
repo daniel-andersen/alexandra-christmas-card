@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <GLKit/GLKit.h>
+#import <metaioSDK/IMetaioSDKIOS.h>
 
-@interface ViewController : UIViewController
+@interface MainViewController : GLKViewController <MetaioSDKDelegate>
 
 @end

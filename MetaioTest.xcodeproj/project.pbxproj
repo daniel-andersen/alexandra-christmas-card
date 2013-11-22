@@ -15,13 +15,36 @@
 		651F2686182A600000889138 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 651F2685182A600000889138 /* AppDelegate.m */; };
 		651F2689182A600000889138 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 651F2687182A600000889138 /* Main_iPhone.storyboard */; };
 		651F268C182A600000889138 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 651F268A182A600000889138 /* Main_iPad.storyboard */; };
-		651F268F182A600000889138 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 651F268E182A600000889138 /* ViewController.m */; };
+		651F268F182A600000889138 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F268E182A600000889138 /* MainViewController.mm */; };
 		651F2691182A600000889138 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 651F2690182A600000889138 /* Images.xcassets */; };
 		651F2698182A600000889138 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F2697182A600000889138 /* XCTest.framework */; };
 		651F2699182A600000889138 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F2675182A600000889138 /* Foundation.framework */; };
 		651F269A182A600000889138 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F2679182A600000889138 /* UIKit.framework */; };
 		651F26A2182A600000889138 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 651F26A0182A600000889138 /* InfoPlist.strings */; };
 		651F26A4182A600000889138 /* MetaioTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 651F26A3182A600000889138 /* MetaioTestTests.m */; };
+		651F26AE182A60BA00889138 /* metaioSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26AD182A60BA00889138 /* metaioSDK.framework */; };
+		651F26B1182A633700889138 /* CameraImageRenderer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F26B0182A633700889138 /* CameraImageRenderer.mm */; };
+		651F26B4182A638300889138 /* Scene.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F26B3182A638300889138 /* Scene.mm */; };
+		651F26B6182A66B300889138 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26B5182A66B300889138 /* MediaPlayer.framework */; };
+		651F26B8182A67B500889138 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26B7182A67B500889138 /* GLKit.framework */; };
+		651F26BA182A67BB00889138 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26B9182A67BB00889138 /* OpenGLES.framework */; };
+		651F26BC182A67E400889138 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26BB182A67E400889138 /* AVFoundation.framework */; };
+		651F26BE182A67F900889138 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26BD182A67F900889138 /* CoreMotion.framework */; };
+		651F26C0182A681200889138 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26BF182A681200889138 /* CoreMedia.framework */; };
+		651F26C2182A682300889138 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26C1182A682300889138 /* Security.framework */; };
+		651F26C4182A682F00889138 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26C3182A682F00889138 /* CFNetwork.framework */; };
+		651F26C6182A684300889138 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26C5182A684300889138 /* AudioToolbox.framework */; };
+		651F26C8182A684A00889138 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26C7182A684A00889138 /* libz.dylib */; };
+		651F26CA182A685B00889138 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26C9182A685B00889138 /* libxml2.dylib */; };
+		651F26CC182A687900889138 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651F26CB182A687900889138 /* CoreLocation.framework */; };
+		651F26D6182A692500889138 /* CameraImageShader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 651F26CE182A68EF00889138 /* CameraImageShader.fsh */; };
+		651F26D7182A692500889138 /* CameraImageShader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 651F26CF182A68EF00889138 /* CameraImageShader.vsh */; };
+		651F26D8182A692500889138 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 651F26D0182A68EF00889138 /* Shader.fsh */; };
+		651F26D9182A692500889138 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 651F26D1182A68EF00889138 /* Shader.vsh */; };
+		651F26E1182A6ADD00889138 /* Assets in Resources */ = {isa = PBXBuildFile; fileRef = 651F26E0182A6ADD00889138 /* Assets */; };
+		651F26E4182A6B2A00889138 /* Gloomies.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F26E3182A6B2A00889138 /* Gloomies.mm */; };
+		651F26E7182A6B4E00889138 /* Constants.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F26E6182A6B4E00889138 /* Constants.mm */; };
+		651F26EA182CFB9C00889138 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 651F26E9182CFB9C00889138 /* Images */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,14 +70,41 @@
 		651F2685182A600000889138 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		651F2688182A600000889138 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		651F268B182A600000889138 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		651F268D182A600000889138 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		651F268E182A600000889138 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		651F268D182A600000889138 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		651F268E182A600000889138 /* MainViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		651F2690182A600000889138 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		651F2696182A600000889138 /* MetaioTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaioTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		651F2697182A600000889138 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		651F269F182A600000889138 /* MetaioTestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MetaioTestTests-Info.plist"; sourceTree = "<group>"; };
 		651F26A1182A600000889138 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		651F26A3182A600000889138 /* MetaioTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetaioTestTests.m; sourceTree = "<group>"; };
+		651F26AD182A60BA00889138 /* metaioSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = metaioSDK.framework; sourceTree = "<group>"; };
+		651F26AF182A633700889138 /* CameraImageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraImageRenderer.h; sourceTree = "<group>"; };
+		651F26B0182A633700889138 /* CameraImageRenderer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CameraImageRenderer.mm; sourceTree = "<group>"; };
+		651F26B2182A638300889138 /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		651F26B3182A638300889138 /* Scene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Scene.mm; sourceTree = "<group>"; };
+		651F26B5182A66B300889138 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		651F26B7182A67B500889138 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		651F26B9182A67BB00889138 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		651F26BB182A67E400889138 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		651F26BD182A67F900889138 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		651F26BF182A681200889138 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		651F26C1182A682300889138 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		651F26C3182A682F00889138 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		651F26C5182A684300889138 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		651F26C7182A684A00889138 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		651F26C9182A685B00889138 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		651F26CB182A687900889138 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		651F26CE182A68EF00889138 /* CameraImageShader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CameraImageShader.fsh; sourceTree = "<group>"; };
+		651F26CF182A68EF00889138 /* CameraImageShader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = CameraImageShader.vsh; sourceTree = "<group>"; };
+		651F26D0182A68EF00889138 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
+		651F26D1182A68EF00889138 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vsh; sourceTree = "<group>"; };
+		651F26E0182A6ADD00889138 /* Assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Assets; sourceTree = "<group>"; };
+		651F26E2182A6B2A00889138 /* Gloomies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gloomies.h; sourceTree = "<group>"; };
+		651F26E3182A6B2A00889138 /* Gloomies.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Gloomies.mm; sourceTree = "<group>"; };
+		651F26E5182A6B4E00889138 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		651F26E6182A6B4E00889138 /* Constants.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Constants.mm; sourceTree = "<group>"; };
+		651F26E9182CFB9C00889138 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +112,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				651F26CC182A687900889138 /* CoreLocation.framework in Frameworks */,
+				651F26CA182A685B00889138 /* libxml2.dylib in Frameworks */,
+				651F26C8182A684A00889138 /* libz.dylib in Frameworks */,
+				651F26C6182A684300889138 /* AudioToolbox.framework in Frameworks */,
+				651F26C4182A682F00889138 /* CFNetwork.framework in Frameworks */,
+				651F26C2182A682300889138 /* Security.framework in Frameworks */,
+				651F26C0182A681200889138 /* CoreMedia.framework in Frameworks */,
+				651F26BE182A67F900889138 /* CoreMotion.framework in Frameworks */,
+				651F26BC182A67E400889138 /* AVFoundation.framework in Frameworks */,
+				651F26BA182A67BB00889138 /* OpenGLES.framework in Frameworks */,
+				651F26B8182A67B500889138 /* GLKit.framework in Frameworks */,
 				651F2678182A600000889138 /* CoreGraphics.framework in Frameworks */,
+				651F26B6182A66B300889138 /* MediaPlayer.framework in Frameworks */,
+				651F26AE182A60BA00889138 /* metaioSDK.framework in Frameworks */,
 				651F267A182A600000889138 /* UIKit.framework in Frameworks */,
 				651F2676182A600000889138 /* Foundation.framework in Frameworks */,
 			);
@@ -103,6 +166,19 @@
 		651F2674182A600000889138 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				651F26CB182A687900889138 /* CoreLocation.framework */,
+				651F26C9182A685B00889138 /* libxml2.dylib */,
+				651F26C7182A684A00889138 /* libz.dylib */,
+				651F26C5182A684300889138 /* AudioToolbox.framework */,
+				651F26C3182A682F00889138 /* CFNetwork.framework */,
+				651F26C1182A682300889138 /* Security.framework */,
+				651F26BF182A681200889138 /* CoreMedia.framework */,
+				651F26BD182A67F900889138 /* CoreMotion.framework */,
+				651F26BB182A67E400889138 /* AVFoundation.framework */,
+				651F26B9182A67BB00889138 /* OpenGLES.framework */,
+				651F26B7182A67B500889138 /* GLKit.framework */,
+				651F26B5182A66B300889138 /* MediaPlayer.framework */,
+				651F26AD182A60BA00889138 /* metaioSDK.framework */,
 				651F2675182A600000889138 /* Foundation.framework */,
 				651F2677182A600000889138 /* CoreGraphics.framework */,
 				651F2679182A600000889138 /* UIKit.framework */,
@@ -116,11 +192,21 @@
 			children = (
 				651F2684182A600000889138 /* AppDelegate.h */,
 				651F2685182A600000889138 /* AppDelegate.m */,
-				651F2687182A600000889138 /* Main_iPhone.storyboard */,
-				651F268A182A600000889138 /* Main_iPad.storyboard */,
-				651F268D182A600000889138 /* ViewController.h */,
-				651F268E182A600000889138 /* ViewController.m */,
+				651F268D182A600000889138 /* MainViewController.h */,
+				651F268E182A600000889138 /* MainViewController.mm */,
+				651F26B2182A638300889138 /* Scene.h */,
+				651F26B3182A638300889138 /* Scene.mm */,
+				651F26E2182A6B2A00889138 /* Gloomies.h */,
+				651F26E3182A6B2A00889138 /* Gloomies.mm */,
+				651F26AF182A633700889138 /* CameraImageRenderer.h */,
+				651F26B0182A633700889138 /* CameraImageRenderer.mm */,
+				651F26E5182A6B4E00889138 /* Constants.h */,
+				651F26E6182A6B4E00889138 /* Constants.mm */,
 				651F2690182A600000889138 /* Images.xcassets */,
+				651F26E9182CFB9C00889138 /* Images */,
+				651F26E0182A6ADD00889138 /* Assets */,
+				651F26CD182A68EF00889138 /* Shaders */,
+				651F26DF182A69E200889138 /* Storyboards */,
 				651F267C182A600000889138 /* Supporting Files */,
 			);
 			path = MetaioTest;
@@ -153,6 +239,26 @@
 				651F26A0182A600000889138 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		651F26CD182A68EF00889138 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				651F26CE182A68EF00889138 /* CameraImageShader.fsh */,
+				651F26CF182A68EF00889138 /* CameraImageShader.vsh */,
+				651F26D0182A68EF00889138 /* Shader.fsh */,
+				651F26D1182A68EF00889138 /* Shader.vsh */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
+		651F26DF182A69E200889138 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				651F2687182A600000889138 /* Main_iPhone.storyboard */,
+				651F268A182A600000889138 /* Main_iPad.storyboard */,
+			);
+			name = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +308,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Alexandra Instituttet";
 				TargetAttributes = {
+					651F2671182A600000889138 = {
+						DevelopmentTeam = 5S5HLXNZY8;
+					};
 					651F2695182A600000889138 = {
 						TestTargetID = 651F2671182A600000889138;
 					};
@@ -231,6 +340,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				651F26EA182CFB9C00889138 /* Images in Resources */,
+				651F26D6182A692500889138 /* CameraImageShader.fsh in Resources */,
+				651F26E1182A6ADD00889138 /* Assets in Resources */,
+				651F26D7182A692500889138 /* CameraImageShader.vsh in Resources */,
+				651F26D8182A692500889138 /* Shader.fsh in Resources */,
+				651F26D9182A692500889138 /* Shader.vsh in Resources */,
 				651F268C182A600000889138 /* Main_iPad.storyboard in Resources */,
 				651F2691182A600000889138 /* Images.xcassets in Resources */,
 				651F2689182A600000889138 /* Main_iPhone.storyboard in Resources */,
@@ -253,9 +368,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				651F268F182A600000889138 /* ViewController.m in Sources */,
+				651F26E7182A6B4E00889138 /* Constants.mm in Sources */,
+				651F268F182A600000889138 /* MainViewController.mm in Sources */,
+				651F26B1182A633700889138 /* CameraImageRenderer.mm in Sources */,
 				651F2686182A600000889138 /* AppDelegate.m in Sources */,
+				651F26E4182A6B2A00889138 /* Gloomies.mm in Sources */,
 				651F2682182A600000889138 /* main.m in Sources */,
+				651F26B4182A638300889138 /* Scene.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,10 +511,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/daniel/projects/MetaioTest,
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MetaioTest/MetaioTest-Prefix.pch";
 				INFOPLIST_FILE = "MetaioTest/MetaioTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -405,10 +534,20 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/daniel/projects/MetaioTest,
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MetaioTest/MetaioTest-Prefix.pch";
 				INFOPLIST_FILE = "MetaioTest/MetaioTest-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -474,6 +613,7 @@
 				651F26A9182A600000889138 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		651F26AA182A600000889138 /* Build configuration list for PBXNativeTarget "MetaioTestTests" */ = {
 			isa = XCConfigurationList;
@@ -482,6 +622,7 @@
 				651F26AC182A600000889138 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
