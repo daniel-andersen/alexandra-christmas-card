@@ -273,9 +273,9 @@ enum State {
     [self drawCameraImage:rect];
     switch (state) {
         case ViewingTree:
+            [self drawTreeGloomies:projectionMatrix];
             break;
         case BeingGuided:
-            [self drawGuide:projectionMatrix];
             break;
         case SeekingObject:
             break;
@@ -294,32 +294,14 @@ enum State {
     [m_pScene drawSnow:motionManager.deviceMotion projectionMatrix:projectionMatrix];
 }
 
-- (void)drawTree:(GLKMatrix4)projectionMatrix {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
+- (void)drawTreeGloomies:(GLKMatrix4)projectionMatrix {
     metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
     if (m_SDKReady && trackingValues.quality > 0) {
         float modelMatrix[16];
         m_pMetaioSDK->getTrackingValues(1, modelMatrix, false, true);
         GLKMatrix4 modelViewMatrix = GLKMatrix4MakeWithArray(modelMatrix);
         
-        [m_pScene drawTreeWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
-        [m_pScene drawObject:OBJECT_SNOWMAN withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
-    }
-}
-
-- (void)drawGuide:(GLKMatrix4)projectionMatrix {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
-    if (m_SDKReady && trackingValues.quality > 0) {
-        float modelMatrix[16];
-        m_pMetaioSDK->getTrackingValues(1, modelMatrix, false, true);
-        GLKMatrix4 modelViewMatrix = GLKMatrix4MakeWithArray(modelMatrix);
-        
-        //[m_pScene drawGuideWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+        [m_pScene drawTreeGloomiesWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
     }
 }
 

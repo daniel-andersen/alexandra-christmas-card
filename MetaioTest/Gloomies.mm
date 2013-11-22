@@ -15,9 +15,6 @@
 
 @property (nonatomic) bool arrivedAtTarget;
 
-@property (nonatomic) GLKVector3 *outputVertices;
-@property (nonatomic) GLKVector2 *outputTexCoords;
-
 @end
 
 @implementation Gloomies
@@ -28,9 +25,6 @@
 @synthesize targetPosition;
 @synthesize averagePosition;
 @synthesize averageVelocity;
-
-@synthesize outputVertices;
-@synthesize outputTexCoords;
 
 - (id)init {
     if (self = [super init]) {
@@ -49,9 +43,6 @@
 		delete individuals[i];
 	}
 	delete individuals;
-    
-	delete outputVertices;
-	delete outputTexCoords;
 }
 
 - (void)initializeIndividuals {
@@ -66,38 +57,29 @@
 		individuals[i]->position.y = (((float)rand() / (float)RAND_MAX) * 500.0f) - 250.0f;
 		individuals[i]->position.z = (((float)rand() / (float)RAND_MAX) * 500.0f) - 250.0f;
         
-		individuals[i]->velocity.x = 0.0f;
-		individuals[i]->velocity.y = 0.0f;
-		individuals[i]->velocity.z = 0.0f;
-        
-		individuals[i]->unitVelocity.x = 0.0f;
-		individuals[i]->unitVelocity.y = 0.0f;
-		individuals[i]->unitVelocity.z = 0.0f;
-        
-		individuals[i]->destVelocity.x = 0.0f;
-		individuals[i]->destVelocity.y = 0.0f;
-		individuals[i]->destVelocity.z = 0.0f;
+        individuals[i]->velocity = GLKVector3Make(0.0f, 0.0f, 0.0f);
+        individuals[i]->unitVelocity = GLKVector3Make(0.0f, 0.0f, 0.0f);
+        individuals[i]->destVelocity = GLKVector3Make(0.0f, 0.0f, 0.0f);
         
 		individuals[i]->targetDist = 0.0f;
 		individuals[i]->velocityRangeIndex = 0.0f;
+        
+        individuals[i]->randomSpeed = ((float)rand() / (float)RAND_MAX) + 0.5f;
 	}
 }
 
 - (void)initializeFlock {
-	targetPosition.x = 0.0f;
-	targetPosition.y = 0.0f;
-	targetPosition.z = 0.0f;
+	targetPosition = GLKVector3Make(0.0f, 0.0f, 0.0f);
     
 	self.arrivedAtTarget = NO;
+    self.individualTargets = NO;
     
 	[self calculateAveragePosition];
 	[self calculateAverageVelocity];
 }
 
 - (void)calculateAveragePosition {
-	averagePosition.x = 0.0f;
-	averagePosition.y = 0.0f;
-	averagePosition.z = 0.0f;
+	averagePosition = GLKVector3Make(0.0f, 0.0f, 0.0f);
     
 	for (int i = individualsCount - 1; i >= 0; i--) {
 		averagePosition.x += individuals[i]->position.x;
@@ -107,9 +89,7 @@
 }
 
 - (void)calculateAverageVelocity {
-	averageVelocity.x = 0.0f;
-	averageVelocity.y = 0.0f;
-	averageVelocity.z = 0.0f;
+	averageVelocity = GLKVector3Make(0.0f, 0.0f, 0.0f);
     
 	for (int i = individualsCount - 1; i >= 0; i--) {
 		averageVelocity.x += individuals[i]->velocity.x;
@@ -221,9 +201,9 @@
 		individual->velocity.z += individual->destVelocity.z;
         
 		// Normalize velocity
-		float len = sqrt((individual->velocity.x * individual->velocity.x) +
-                         (individual->velocity.y * individual->velocity.y) +
-                         (individual->velocity.z * individual->velocity.z));
+		float len = sqrtf((individual->velocity.x * individual->velocity.x) +
+                          (individual->velocity.y * individual->velocity.y) +
+                          (individual->velocity.z * individual->velocity.z));
         
 		if (len > 0.0f) {
 			individual->unitVelocity.x = individual->velocity.x / len;
@@ -238,6 +218,20 @@
 			individual->velocity.y = individual->unitVelocity.y * changeMax;
 			individual->velocity.z = individual->unitVelocity.z * changeMax;
 		}
+        
+        // No move longer than target if individual target
+        if (self.individualTargets) {
+            GLKVector3 d = GLKVector3Subtract(individual->position, individual->targetPosition);
+            float l1 = sqrtf((d.x * d.x) +
+                             (d.y * d.y) +
+                             (d.z * d.z));
+            float l2 = sqrtf((individual->velocity.x * individual->velocity.x) +
+                             (individual->velocity.y * individual->velocity.y) +
+                             (individual->velocity.z * individual->velocity.z));
+            if (l2 > l1) {
+                individual->velocity = GLKVector3Subtract(individual->targetPosition, individual->position);
+            }
+        }
         
 		// Move individual
 		individual->position.x += individual->velocity.x;
@@ -278,76 +272,22 @@
 	targetPosition.z += v.z;
 }
 
-- (void)update {
-	[self calculateDistanceToTarget];
-	[self sortDistanceToTarget];
-	[self calculateDestinationVelocity];
-	[self moveIndividuals];
-}
-
-- (void)render {
-	//glTranslatef(0.0f, 0.0f, -1.0f);
-    
-	// Calculate vertices
-	int index = 0;
-
+- (void)moveToIndividualTargets {
 	for (int i = individualsCount - 1; i >= 0; i--) {
-		outputVertices[index  ].x = individuals[i]->position.x + ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index  ].y = individuals[i]->position.y - ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index++].z = individuals[i]->position.z - ([Constants instance].gloomiesRenderSize / 2.0f);
-        
-		outputVertices[index  ].x = individuals[i]->position.x - ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index  ].y = individuals[i]->position.y - ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index++].z = individuals[i]->position.z - ([Constants instance].gloomiesRenderSize / 2.0f);
-        
-		outputVertices[index  ].x = individuals[i]->position.x + ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index  ].y = individuals[i]->position.y + ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index++].z = individuals[i]->position.z - ([Constants instance].gloomiesRenderSize / 2.0f);
-        
-		outputVertices[index  ].x = individuals[i]->position.x + ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index  ].y = individuals[i]->position.y + ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index++].z = individuals[i]->position.z - ([Constants instance].gloomiesRenderSize / 2.0f);
-
-		outputVertices[index  ].x = individuals[i]->position.x - ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index  ].y = individuals[i]->position.y - ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index++].z = individuals[i]->position.z - ([Constants instance].gloomiesRenderSize / 2.0f);
-
-		outputVertices[index  ].x = individuals[i]->position.x - ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index  ].y = individuals[i]->position.y + ([Constants instance].gloomiesRenderSize / 2.0f);
-		outputVertices[index++].z = individuals[i]->position.z - ([Constants instance].gloomiesRenderSize / 2.0f);
-	}
-    
-	// Render
-    //glDisable(GL_ALPHA_TEST);
-    
-	//glEnable(GL_TEXTURE_2D);
-	//glBindTexture(GL_TEXTURE_2D, gloomieTexture->index);
-    
-	//glEnable(GL_BLEND);
-	//glBlendFunc(GL_ONE, GL_ONE);
-    
-	//glDepthMask(GL_FALSE);
-    
-	//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    
-    //glEnableClientState(GL_VERTEX_ARRAY);
-    //glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-    //glVertexPointer(3, GL_FLOAT, 0, outputVertices);
-	//glTexCoordPointer(2, GL_FLOAT, 0, outputTexCoords);
-    
-	//glDrawArrays(GL_TRIANGLES, 0, individualsCount * 6);
-    
-	//glDepthMask(GL_TRUE);
-    
-	//glDisable(GL_TEXTURE_2D);
-	//glDisable(GL_BLEND);
-    
-    //glDisableClientState(GL_VERTEX_ARRAY);
-    //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    
-	//glEnable(GL_ALPHA_TEST);
+        individuals[i]->destVelocity = GLKVector3Subtract(individuals[i]->targetPosition, individuals[i]->position);
+    }
+    [self moveIndividuals];
 }
 
+- (void)update {
+    if (self.individualTargets) {
+        [self moveToIndividualTargets];
+    } else {
+        [self calculateDistanceToTarget];
+        [self sortDistanceToTarget];
+        [self calculateDestinationVelocity];
+        [self moveIndividuals];
+    }
+}
 
 @end
