@@ -43,6 +43,7 @@ enum
 enum
 {
 	UNIFORM_MODELVIEWPROJECTION_MATRIX,
+    UNIFORM_ALPHA,
 	NUM_UNIFORMS
 };
 
@@ -50,6 +51,7 @@ enum
 {
 	GLKMatrix4 m_modelViewProjectionMatrix;
 
+    GLuint textureAlpha;
 	GLint m_uniforms[NUM_UNIFORMS];
 }
 
@@ -107,7 +109,7 @@ enum
  *
  * @param screenAspect Aspect ratio of the rendering area (in the given orientation)
  */
-- (void)draw:(metaio::ESCREEN_ROTATION)screenRotation renderTargetAspect:(float)screenAspect
+- (void)draw:(metaio::ESCREEN_ROTATION)screenRotation renderTargetAspect:(float)screenAspect alpha:(float)alpha
 {
 	if (!m_initialized)
 		return;
@@ -270,6 +272,7 @@ enum
 	}
 
 	glUniformMatrix4fv(m_uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
+    glUniform1f(textureAlpha, alpha);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
@@ -486,6 +489,7 @@ enum
 
 	// Get uniform locations.
 	m_uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX] = glGetUniformLocation(m_shaderProgram, "modelViewProjectionMatrix");
+    textureAlpha = glGetUniformLocation(m_shaderProgram, "alpha");
 
 	// Release vertex and fragment shaders.
 	if (vertShader)

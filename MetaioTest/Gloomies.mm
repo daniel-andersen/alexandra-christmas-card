@@ -13,8 +13,6 @@
 
 @interface Gloomies ()
 
-@property (nonatomic) bool arrivedAtTarget;
-
 @end
 
 @implementation Gloomies
@@ -71,7 +69,6 @@
 - (void)initializeFlock {
 	targetPosition = GLKVector3Make(0.0f, 0.0f, 0.0f);
     
-	self.arrivedAtTarget = NO;
     self.individualTargets = NO;
     
 	[self calculateAveragePosition];

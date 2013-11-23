@@ -37,6 +37,10 @@ const float treeWidth = 150.0f;
 const float treeHeight = 300.0f;
 const float treeYOffset = 20.0f;
 
+const float giftSize = 50.0f;
+
+const float cameraAlphaSpeed = 0.02f;
+
 const Vertex gObjectVertexData[] = {
 	{.position = { objectScaleX,                0.0f, -1.0f}, .texCoord = {1.0f, 0.0f}},
 	{.position = {-objectScaleX,                0.0f, -1.0f}, .texCoord = {0.0f, 0.0f}},
@@ -139,6 +143,7 @@ typedef struct {
     
     float treeGloomieAlpha;
     float treeAnimation;
+    float gloomiesTargetMode;
 }
 
 - (id)init {
@@ -235,6 +240,8 @@ typedef struct {
         treeGloomiesTranslation[12] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 3.0f) height:(treeHeight * 2.0f / 3.0f)]; treeGloomiesScale[12] = 0.75f;
 
         gloomies = [[Gloomies alloc] init];
+
+        self.cameraAlpha = 1.0f;
 	}
 
 	return self;
@@ -265,7 +272,9 @@ typedef struct {
 	}
 }
 
-- (void)setGloomiesTargetWithTrackingValues:(metaio::TrackingValues)trackingValues modelViewMatrix:(GLKMatrix4)modelViewMatrix deviceMotion:(CMDeviceMotion *)deviceMotion {
+- (void)setGloomiesTargetWithTrackingValues:(metaio::TrackingValues)trackingValues modelViewMatrix:(GLKMatrix4)modelViewMatrix deviceMotion:(CMDeviceMotion *)deviceMotion targetMode:(int)targetMode {
+    gloomiesTargetMode = targetMode;
+    
     if (!gloomiesIsTrackingMatrix) {
         [self translateGloomiesFromModelViewMatrix:gloomiesModelViewMatrix toModelViewMatrix:modelViewMatrix];
         gloomiesIsTrackingMatrix = YES;
@@ -288,8 +297,6 @@ typedef struct {
     }
 
     gloomiesModelViewMatrix = modelViewMatrix;
-
-    gloomies.targetPosition = GLKVector3Make(300.0f, 300.0f, -200.0f);
 }
 
 - (void)translateGloomiesFromModelViewMatrix:(GLKMatrix4)modelViewMatrix1 toModelViewMatrix:(GLKMatrix4)modelViewMatrix2 {
@@ -315,26 +322,81 @@ typedef struct {
     for (int i = 0; i < SNOWFLAKES_COUNT; i++) {
         [self updateSnowflake:i];
     }
-    gloomies.individualTargets = NO;
+    [self updateCameraAlpha];
     if (gloomiesIsTrackingMatrix) {
         gloomiesShowingTree |= [self gloomiesDistanceToTree] < treeWidth * 1.5f;
         treeAnimation += 0.02f;
         if (gloomiesShowingTree) {
             treeGloomieAlpha = MIN(treeGloomieAlpha + 0.05f, 1.0f);
+        }
+    } else {
+        gloomiesShowingTree = NO;
+    }
+    [self setGloomiesTarget];
+    for (int i = 0; i < 2; i++) {
+        [gloomies update];
+    }
+}
+
+- (void)updateCameraAlpha {
+    float destAlpha = 1.0f;
+    if (gloomiesIsTrackingMatrix) {
+        destAlpha = 0.3f;
+    }
+    if (self.cameraAlpha < destAlpha) {
+        self.cameraAlpha += cameraAlphaSpeed;
+    }
+    if (self.cameraAlpha > destAlpha) {
+        self.cameraAlpha -= cameraAlphaSpeed;
+    }
+    self.cameraAlpha = MIN(1.0f, MAX(0.0f, self.cameraAlpha));
+}
+
+- (void)setGloomiesTarget {
+    gloomies.individualTargets = NO;
+    if (gloomiesIsTrackingMatrix) {
+        if (gloomiesShowingTree) {
             gloomies.individualTargets = YES;
-            for (int i = 0; i < gloomies.individualsCount; i++) {
-                float targetHeight = treeHeight * ((float)i / gloomies.individualsCount) * ((float)i / gloomies.individualsCount);
-                float targetAngle = (treeAnimation * gloomies.individuals[i]->randomSpeed) + ((float)i * 2.0f);
-                gloomies.individuals[i]->targetPosition = [self treeGloomieOffsetFromAngle:targetAngle height:targetHeight];
+            if (gloomiesTargetMode == GLOOMIES_TARGET_TREE) {
+                [self setGloomiesTargetTree];
+            } else if (gloomiesTargetMode == GLOOMIES_TARGET_GIFT) {
+                [self setGloomiesTargetGift];
             }
         } else {
             gloomies.targetPosition = GLKVector3Make(0.0f, 0.0f, treeYOffset + (treeHeight / 2.0f));
         }
     } else {
-        gloomiesShowingTree = NO;
+        gloomies.targetPosition = GLKVector3Make(300.0f, 300.0f, -200.0f);
     }
-    for (int i = 0; i < 2; i++) {
-        [gloomies update];
+}
+
+- (void)setGloomiesTargetTree {
+    for (int i = 0; i < gloomies.individualsCount; i++) {
+        float targetHeight = treeHeight * ((float)i / gloomies.individualsCount) * ((float)i / gloomies.individualsCount);
+        float targetAngle = (treeAnimation * gloomies.individuals[i]->randomSpeed) + ((float)i * 2.0f);
+        gloomies.individuals[i]->targetPosition = [self treeGloomieOffsetFromAngle:targetAngle height:targetHeight];
+    }
+}
+
+- (void)setGloomiesTargetGift {
+    int gloomiesPerSide = gloomies.individualsCount / 12;
+    float stepSize = (giftSize * 2.0f) / (float)gloomiesPerSide;
+    for (int i = 0; i < gloomiesPerSide; i++) {
+        float step = (float)i * stepSize;
+        gloomies.individuals[i + (gloomiesPerSide *  0)]->targetPosition = GLKVector3Make(-giftSize + step,  giftSize,         giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  1)]->targetPosition = GLKVector3Make(-giftSize + step, -giftSize,         giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  2)]->targetPosition = GLKVector3Make(-giftSize,        -giftSize + step,  giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  3)]->targetPosition = GLKVector3Make( giftSize,        -giftSize + step,  giftSize);
+
+        gloomies.individuals[i + (gloomiesPerSide *  4)]->targetPosition = GLKVector3Make(-giftSize + step,  giftSize,        -giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  5)]->targetPosition = GLKVector3Make(-giftSize + step, -giftSize,        -giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  6)]->targetPosition = GLKVector3Make(-giftSize,        -giftSize + step, -giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  7)]->targetPosition = GLKVector3Make( giftSize,        -giftSize + step, -giftSize);
+
+        gloomies.individuals[i + (gloomiesPerSide *  8)]->targetPosition = GLKVector3Make(-giftSize,        -giftSize,        -giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide *  9)]->targetPosition = GLKVector3Make(-giftSize,         giftSize,        -giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide * 10)]->targetPosition = GLKVector3Make( giftSize,        -giftSize,        -giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide * 11)]->targetPosition = GLKVector3Make( giftSize,         giftSize,        -giftSize + step);
     }
 }
 
@@ -460,7 +522,7 @@ typedef struct {
     glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 3));
     
     for (int i = 0; i < treeGloomiesCount; i++) {
-        glUniform1f(textureAlpha, treeGloomieAlpha * MAX(0.0f, MIN(1.0f, cosf((treeAnimation * 1.5f) + (i * 2.0f)) + 1.5f)));
+        glUniform1f(textureAlpha, treeGloomieAlpha * MAX(0.0f, MIN(1.0f, cosf((treeAnimation * 2.5f) + (i * 2.0f)) + 1.5f)));
 
         GLKMatrix4 modelViewMatrix1 = GLKMatrix4Translate(modelViewMatrix, treeGloomiesTranslation[i].x, treeGloomiesTranslation[i].y, treeGloomiesTranslation[i].z);
         modelViewMatrix1 = [self billboardMatrix:modelViewMatrix1];

@@ -3,7 +3,7 @@
 
 // Set this to true if you want to exploit fast texture upload using CVOpenGLESTextureCache and the
 // capturing context (a CVImageBufferRef object) exposed by the metaio SDK. This is specific to iOS.
-#define IOS_FAST_TEXTURE_UPLOAD false
+#define IOS_FAST_TEXTURE_UPLOAD true
 
 @interface CameraImageRenderer : NSObject
 {
@@ -66,7 +66,7 @@
 #endif
 }
 
-- (void)draw:(metaio::ESCREEN_ROTATION)screenRotation renderTargetAspect:(float)screenAspect;
+- (void)draw:(metaio::ESCREEN_ROTATION)screenRotation renderTargetAspect:(float)screenAspect alpha:(float)alpha;
 - (float)scaleX;
 - (float)scaleY;
 - (void)updateFrame:(metaio::ImageStruct*)frame;

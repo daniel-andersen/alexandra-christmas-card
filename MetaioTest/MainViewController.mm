@@ -19,12 +19,16 @@
 
 #define RESET_TRACKING_DELAY 3.0f
 
+#define VIEWING_TREE_TIME 10.0f
+
 metaio::IMetaioSDKIOS *m_pMetaioSDK;
 
 enum State {
     ViewingTree      = 0,
-    BeingGuided      = 1,
-    SeekingObject    = 2
+    ShowingGift      = 1,
+    ShowingArrow     = 2,
+    BeingGuided      = 3,
+    SeekingObject    = 4
 };
     
 @interface MainViewController () {
@@ -37,6 +41,8 @@ enum State {
     CMMotionManager *motionManager;
     
     State state;
+    CFTimeInterval stateStartTime;
+    
     NSString *treeFilename;
 }
 @property (strong, nonatomic) EAGLContext *context;
@@ -245,7 +251,7 @@ enum State {
 }
 
 - (void)updateGloomiesTarget {
-    if (state != ViewingTree) {
+    if (state != ViewingTree && state != ShowingGift) {
         return;
     }
     metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
@@ -253,7 +259,7 @@ enum State {
     if (m_SDKReady && trackingValues.quality > 0) {
         float modelMatrix[16];
         m_pMetaioSDK->getTrackingValues(1, modelMatrix, false, true);
-        [m_pScene setGloomiesTargetWithTrackingValues:trackingValues modelViewMatrix:GLKMatrix4MakeWithArray(modelMatrix) deviceMotion:motionManager.deviceMotion];
+        [m_pScene setGloomiesTargetWithTrackingValues:trackingValues modelViewMatrix:GLKMatrix4MakeWithArray(modelMatrix) deviceMotion:motionManager.deviceMotion targetMode:(state == ViewingTree ? GLOOMIES_TARGET_GIFT : GLOOMIES_TARGET_GIFT)];
     } else {
         [m_pScene setGloomiesTargetWithDeviceMotion:motionManager.deviceMotion];
     }
@@ -308,7 +314,7 @@ enum State {
 - (void)drawCameraImage:(CGRect)rect {
 	glDisable(GL_DEPTH_TEST);
     
-	[m_pCameraImageRenderer draw:m_pMetaioSDK->getScreenRotation() renderTargetAspect:((float)rect.size.width / (float)rect.size.height)];
+	[m_pCameraImageRenderer draw:m_pMetaioSDK->getScreenRotation() renderTargetAspect:((float)rect.size.width / (float)rect.size.height) alpha:[m_pScene cameraAlpha]];
     
 	glEnable(GL_DEPTH_TEST);
 }
@@ -374,6 +380,7 @@ enum State {
 
 - (void)startViewingTree {
     state = ViewingTree;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
     
     //m_pMetaioSDK->setTrackingConfiguration(std::string([treeFilename UTF8String]));
     NSString *trackingDataFile = [[NSBundle mainBundle] pathForResource:@"TrackingData_MarkerlessFast" ofType:@"xml" inDirectory:@"Assets"];
