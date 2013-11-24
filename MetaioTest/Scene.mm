@@ -28,6 +28,8 @@ const float gloomieScaleY = 0.3f;
 const float treeGloomieScaleX = 1.5f;
 const float treeGloomieScaleY = 1.5f;
 
+const float giftScale = 0.5f;
+
 const int treeGloomiesCount = 13;
 
 GLKVector3 treeGloomiesTranslation[treeGloomiesCount];
@@ -37,17 +39,67 @@ const float treeWidth = 150.0f;
 const float treeHeight = 300.0f;
 const float treeYOffset = 20.0f;
 
-const float giftSize = 50.0f;
+const int giftCount = 4;
+const float giftSize = 20.0f;
+GLKVector3 giftPosition[giftCount];
+
+const float arrowSize = 30.0f;
+
+const float seekingNewPositionDelay = 5.0f;
 
 const float cameraAlphaSpeed = 0.02f;
 
 const Vertex gObjectVertexData[] = {
-	{.position = { objectScaleX,                0.0f, -1.0f}, .texCoord = {1.0f, 0.0f}},
-	{.position = {-objectScaleX,                0.0f, -1.0f}, .texCoord = {0.0f, 0.0f}},
-	{.position = { objectScaleX, objectScaleY * 2.0f, -1.0f}, .texCoord = {1.0f, 1.0f}},
-	{.position = { objectScaleX, objectScaleY * 2.0f, -1.0f}, .texCoord = {1.0f, 1.0f}},
-	{.position = {-objectScaleX,                0.0f, -1.0f}, .texCoord = {0.0f, 0.0f}},
-	{.position = {-objectScaleX, objectScaleY * 2.0f, -1.0f}, .texCoord = {0.0f, 1.0f}},
+	{.position = { objectScaleX, -objectScaleY, -1.0f}, .texCoord = {1.0f, 0.0f}},
+	{.position = {-objectScaleX, -objectScaleY, -1.0f}, .texCoord = {0.0f, 0.0f}},
+	{.position = { objectScaleX,  objectScaleY, -1.0f}, .texCoord = {1.0f, 1.0f}},
+	{.position = { objectScaleX,  objectScaleY, -1.0f}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-objectScaleX, -objectScaleY, -1.0f}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-objectScaleX,  objectScaleY, -1.0f}, .texCoord = {0.0f, 1.0f}},
+};
+
+const Vertex gGiftVertexData[] = {
+	{.position = { giftScale, -giftScale, -giftScale}, .texCoord = {1.0f, 0.0f}},
+	{.position = {-giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = { giftScale,  giftScale, -giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = { giftScale,  giftScale, -giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-giftScale,  giftScale, -giftScale}, .texCoord = {0.0f, 1.0f}},
+
+	{.position = { giftScale, -giftScale,  giftScale}, .texCoord = {1.0f, 0.0f}},
+	{.position = {-giftScale, -giftScale,  giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = { giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = { giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-giftScale, -giftScale,  giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-giftScale,  giftScale,  giftScale}, .texCoord = {0.0f, 1.0f}},
+
+	{.position = {-giftScale,  giftScale, -giftScale}, .texCoord = {1.0f, 0.0f}},
+	{.position = {-giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-giftScale, -giftScale,  giftScale}, .texCoord = {0.0f, 1.0f}},
+
+	{.position = { giftScale,  giftScale, -giftScale}, .texCoord = {1.0f, 0.0f}},
+	{.position = { giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = { giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = { giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = { giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = { giftScale, -giftScale,  giftScale}, .texCoord = {0.0f, 1.0f}},
+
+	{.position = { giftScale,  giftScale, -giftScale}, .texCoord = {1.0f, 0.0f}},
+	{.position = {-giftScale,  giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = { giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = { giftScale,  giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-giftScale,  giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-giftScale,  giftScale,  giftScale}, .texCoord = {0.0f, 1.0f}},
+
+	{.position = { giftScale, -giftScale, -giftScale}, .texCoord = {1.0f, 0.0f}},
+	{.position = {-giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = { giftScale, -giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = { giftScale, -giftScale,  giftScale}, .texCoord = {1.0f, 1.0f}},
+	{.position = {-giftScale, -giftScale, -giftScale}, .texCoord = {0.0f, 0.0f}},
+	{.position = {-giftScale, -giftScale,  giftScale}, .texCoord = {0.0f, 1.0f}},
 };
 
 const Vertex gTreeGloomieVertexData[] = {
@@ -127,7 +179,11 @@ typedef struct {
 	GLuint	m_gloomieVertexArray;
 	GLuint	m_gloomieVertexBuffer;
 
+	GLuint	m_giftVertexArray;
+	GLuint	m_giftVertexBuffer;
+
     GLKTextureInfo *objectTexture[OBJECT_COUNT];
+    GLKTextureInfo *giftTexture[giftCount];
     GLKTextureInfo *snowflakeTexture;
     GLKTextureInfo *gloomieTexture;
     GLKTextureInfo *treeGloomieTexture;
@@ -142,8 +198,16 @@ typedef struct {
     Snowflake snowflakes[SNOWFLAKES_COUNT];
     
     float treeGloomieAlpha;
-    float treeAnimation;
-    float gloomiesTargetMode;
+    float animation;
+    int gloomiesTargetMode;
+    
+    int giftNumber;
+    
+    GLKVector3 arrowCenter;
+
+    GLKVector3 seekingSlowSource;
+    GLKVector3 seekingSlowDestination;
+    CFTimeInterval seekingArrivalTime;
 }
 
 - (id)init {
@@ -210,6 +274,20 @@ typedef struct {
         glEnableVertexAttribArray(ATTRIB_TEXCOORDS);
 		glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 3));
 
+        // Gift
+		glGenVertexArraysOES(1, &m_giftVertexArray);
+		glBindVertexArrayOES(m_giftVertexArray);
+        
+		glGenBuffers(1, &m_giftVertexBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, m_giftVertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(gGiftVertexData), gGiftVertexData, GL_STATIC_DRAW);
+        
+		glEnableVertexAttribArray(ATTRIB_VERTEX);
+		glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(0));
+        
+        glEnableVertexAttribArray(ATTRIB_TEXCOORDS);
+		glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 3));
+
         // Textures
         glBindVertexArrayOES(0);
         
@@ -220,10 +298,14 @@ typedef struct {
         treeGloomieTexture = [self setupTexture:@"Images/tree_gloomie.png"];
         snowflakeTexture = [self setupTexture:@"Images/snowflake.png"];
         gloomieTexture = [self setupTexture:@"Images/gloomie.png"];
+        for (int i = 0; i < giftCount; i++) {
+            giftTexture[i] = [self setupTexture:[NSString stringWithFormat:@"Images/gift%i.png", i + 1]];
+        }
 
         gloomiesIsTrackingMatrix = NO;
         gloomiesShowingTree = NO;
-        treeAnimation = 0.0f;
+        animation = 0.0f;
+        gloomiesTargetMode = GLOOMIES_TARGET_NONE;
         
         treeGloomiesTranslation[ 0] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 0.0f) height:0.0f];                       treeGloomiesScale[ 0] = 0.75f;
         treeGloomiesTranslation[ 1] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 1.0f) height:0.0f];                       treeGloomiesScale[ 1] = 0.75f;
@@ -239,6 +321,13 @@ typedef struct {
         treeGloomiesTranslation[11] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 3.0f) height:(treeHeight * 1.0f / 3.0f)]; treeGloomiesScale[11] = 0.75f;
         treeGloomiesTranslation[12] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 3.0f) height:(treeHeight * 2.0f / 3.0f)]; treeGloomiesScale[12] = 0.75f;
 
+        giftPosition[0] = GLKVector3Make( 200.0f,  100.0f, treeYOffset);
+        giftPosition[1] = GLKVector3Make(  50.0f, -200.0f, treeYOffset);
+        giftPosition[2] = GLKVector3Make( 300.0f, -150.0f, treeYOffset);
+        giftPosition[3] = GLKVector3Make(-150.0f, -150.0f, treeYOffset);
+        
+        giftNumber = 0;
+        
         gloomies = [[Gloomies alloc] init];
 
         self.cameraAlpha = 1.0f;
@@ -285,7 +374,9 @@ typedef struct {
     gloomiesModelViewMatrix = modelViewMatrix;
 }
 
-- (void)setGloomiesTargetWithDeviceMotion:(CMDeviceMotion *)deviceMotion {
+- (void)setGloomiesTargetWithDeviceMotion:(CMDeviceMotion *)deviceMotion targetMode:(int)targetMode {
+    gloomiesTargetMode = targetMode;
+
     GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, deviceMotion.attitude.roll, 1, 0, 0);
     modelViewMatrix = GLKMatrix4Rotate(modelViewMatrix, deviceMotion.attitude.pitch, 0, -1, 0);
@@ -302,6 +393,7 @@ typedef struct {
 - (void)translateGloomiesFromModelViewMatrix:(GLKMatrix4)modelViewMatrix1 toModelViewMatrix:(GLKMatrix4)modelViewMatrix2 {
     GLKMatrix4 inverseModelViewMatrix = [self invertMatrix:modelViewMatrix2];
     gloomies.targetPosition = [self translatePoint:gloomies.targetPosition fromModelViewMatrix:modelViewMatrix1 toInverseModelViewMatrix:inverseModelViewMatrix];
+    gloomies.averagePosition = [self translatePoint:gloomies.averagePosition fromModelViewMatrix:modelViewMatrix1 toInverseModelViewMatrix:inverseModelViewMatrix];
     for (int i = 0; i < gloomies.individualsCount; i++) {
         gloomies.individuals[i]->position = [self translatePoint:gloomies.individuals[i]->position fromModelViewMatrix:modelViewMatrix1 toInverseModelViewMatrix:inverseModelViewMatrix];
     }
@@ -318,14 +410,44 @@ typedef struct {
     }
 }
 
+- (void)startShowingArrow {
+    [self randomGloomiesDestinationAwayFromCamera];
+    arrowCenter = GLKVector3Make(0.0f, 0.0f, 0.0f);
+}
+
+- (void)startViewingObject {
+    gloomies.targetPosition = gloomies.averagePosition;
+}
+
+- (void)randomGloomiesDestinationAwayFromCamera {
+    [self randomGloomiesDestination];
+    seekingArrivalTime = 0.0f;
+}
+
+- (void)randomGloomiesDestination {
+    float distance = 750.0f;
+    float a1 = ((float)rand() / (float)RAND_MAX) * M_PI * 2.0f;
+    float a2 = (((float)rand() / (float)RAND_MAX) * 2.0f) - 1.0f;
+    gloomies.targetPosition = GLKVector3Make(cosf(a1) * distance, sinf(a1) * distance, 200.0f * a2);
+
+    a1 += M_PI / 4.0f;
+    seekingSlowSource = gloomies.targetPosition;
+    seekingSlowDestination = GLKVector3Make(cosf(a1) * distance, sinf(a1) * distance, 200.0f * a2);
+    
+    seekingArrivalTime = 0.0f;
+}
+
 - (void)update:(CMDeviceMotion *)deviceMotion {
     for (int i = 0; i < SNOWFLAKES_COUNT; i++) {
         [self updateSnowflake:i];
     }
     [self updateCameraAlpha];
+    animation += 0.02f;
+    if (gloomiesTargetMode != GLOOMIES_TARGET_SEEKING_OBJECT) {
+        seekingArrivalTime = -1.0f;
+    }
     if (gloomiesIsTrackingMatrix) {
         gloomiesShowingTree |= [self gloomiesDistanceToTree] < treeWidth * 1.5f;
-        treeAnimation += 0.02f;
         if (gloomiesShowingTree) {
             treeGloomieAlpha = MIN(treeGloomieAlpha + 0.05f, 1.0f);
         }
@@ -333,14 +455,24 @@ typedef struct {
         gloomiesShowingTree = NO;
     }
     [self setGloomiesTarget];
+    [self calculateDistanceToTrackedObject];
     for (int i = 0; i < 2; i++) {
         [gloomies update];
     }
 }
 
+- (void)calculateDistanceToTrackedObject {
+    if (gloomiesIsTrackingMatrix) {
+        GLKVector4 p = GLKMatrix4MultiplyVector4(gloomiesModelViewMatrix, GLKVector4Make(0.0f, 0.0f, 0.0f, 1.0f));
+        self.distanceToTrackedObject = GLKVector3Length(GLKVector3Make(p.x, p.y, p.z));
+    } else {
+        self.distanceToTrackedObject = 10000.0f;
+    }
+}
+
 - (void)updateCameraAlpha {
     float destAlpha = 1.0f;
-    if (gloomiesIsTrackingMatrix) {
+    if (gloomiesIsTrackingMatrix && (gloomiesTargetMode == GLOOMIES_TARGET_TREE || gloomiesTargetMode == GLOOMIES_TARGET_GIFT)) {
         destAlpha = 0.3f;
     }
     if (self.cameraAlpha < destAlpha) {
@@ -361,42 +493,115 @@ typedef struct {
                 [self setGloomiesTargetTree];
             } else if (gloomiesTargetMode == GLOOMIES_TARGET_GIFT) {
                 [self setGloomiesTargetGift];
+            } else if (gloomiesTargetMode == GLOOMIES_TARGET_VIEWING_OBJECT) {
+                gloomies.individualTargets = NO;
+                [self setGloomiesTargetObject];
             }
         } else {
             gloomies.targetPosition = GLKVector3Make(0.0f, 0.0f, treeYOffset + (treeHeight / 2.0f));
         }
     } else {
-        gloomies.targetPosition = GLKVector3Make(300.0f, 300.0f, -200.0f);
+        if (gloomiesTargetMode == GLOOMIES_TARGET_ARROW) {
+            gloomies.individualTargets = YES;
+            [self setGloomiesTargetArrow];
+        } else if (gloomiesTargetMode == GLOOMIES_TARGET_SEEKING_OBJECT) {
+            [self setGloomiesTargetRandom];
+        } else if (gloomiesTargetMode == GLOOMIES_TARGET_BRINGING_OBJECT_HOME) {
+            [self setGloomiesTargetBringingObjectHome];
+        } else {
+            gloomies.targetPosition = GLKVector3Make(0.0f, 500.0f, 0.0f);
+        }
+    }
+}
+
+- (void)setGloomiesTargetRandom {
+    if (seekingArrivalTime == -1.0f) {
+        [self randomGloomiesDestinationAwayFromCamera];
+        seekingArrivalTime = 0.0f;
+    }
+    if ([self gloomiesDistanceToTarget] < 50.0f) {
+        if (seekingArrivalTime == 0.0f) {
+            seekingArrivalTime = CFAbsoluteTimeGetCurrent();
+        }
+    }
+    if (seekingArrivalTime != 0.0f) {
+        if (CFAbsoluteTimeGetCurrent() > seekingArrivalTime + seekingNewPositionDelay) {
+            [self randomGloomiesDestination];
+        } else {
+            float t = (CFAbsoluteTimeGetCurrent() - seekingArrivalTime) / seekingNewPositionDelay;
+            GLKVector3 d = GLKVector3Subtract(seekingSlowDestination, seekingSlowSource);
+            gloomies.targetPosition = GLKVector3Make(seekingSlowSource.x - (d.x * t),
+                                                     seekingSlowSource.y - (d.y * t),
+                                                     seekingSlowSource.z - (d.z * t));
+        }
     }
 }
 
 - (void)setGloomiesTargetTree {
     for (int i = 0; i < gloomies.individualsCount; i++) {
         float targetHeight = treeHeight * ((float)i / gloomies.individualsCount) * ((float)i / gloomies.individualsCount);
-        float targetAngle = (treeAnimation * gloomies.individuals[i]->randomSpeed) + ((float)i * 2.0f);
+        float targetAngle = (animation * gloomies.individuals[i]->randomSpeed) + ((float)i * 2.0f);
         gloomies.individuals[i]->targetPosition = [self treeGloomieOffsetFromAngle:targetAngle height:targetHeight];
     }
+}
+
+- (void)setGloomiesTargetBringingObjectHome {
+    GLKMatrix4 inverseMatrix = [self invertMatrix:gloomiesModelViewMatrix];
+    GLKVector4 p = GLKMatrix4MultiplyVector4(inverseMatrix, GLKVector4Make(0.0f, 0.0f, -300.0f, 1.0f));
+    gloomies.targetPosition = GLKVector3Make(p.x, p.y, p.z);
+}
+
+- (void)setGloomiesTargetObject {
+    gloomies.targetPosition = GLKVector3Make(0.0f, 0.0f, 40.0f);
 }
 
 - (void)setGloomiesTargetGift {
     int gloomiesPerSide = gloomies.individualsCount / 12;
     float stepSize = (giftSize * 2.0f) / (float)gloomiesPerSide;
+    GLKVector3 t = giftPosition[giftNumber];
+
     for (int i = 0; i < gloomiesPerSide; i++) {
         float step = (float)i * stepSize;
-        gloomies.individuals[i + (gloomiesPerSide *  0)]->targetPosition = GLKVector3Make(-giftSize + step,  giftSize,         giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  1)]->targetPosition = GLKVector3Make(-giftSize + step, -giftSize,         giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  2)]->targetPosition = GLKVector3Make(-giftSize,        -giftSize + step,  giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  3)]->targetPosition = GLKVector3Make( giftSize,        -giftSize + step,  giftSize);
 
-        gloomies.individuals[i + (gloomiesPerSide *  4)]->targetPosition = GLKVector3Make(-giftSize + step,  giftSize,        -giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  5)]->targetPosition = GLKVector3Make(-giftSize + step, -giftSize,        -giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  6)]->targetPosition = GLKVector3Make(-giftSize,        -giftSize + step, -giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  7)]->targetPosition = GLKVector3Make( giftSize,        -giftSize + step, -giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  0)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y + giftSize,        t.z + giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  1)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y - giftSize,        t.z + giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  2)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize + step, t.z + giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  3)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize + step, t.z + giftSize);
 
-        gloomies.individuals[i + (gloomiesPerSide *  8)]->targetPosition = GLKVector3Make(-giftSize,        -giftSize,        -giftSize + step);
-        gloomies.individuals[i + (gloomiesPerSide *  9)]->targetPosition = GLKVector3Make(-giftSize,         giftSize,        -giftSize + step);
-        gloomies.individuals[i + (gloomiesPerSide * 10)]->targetPosition = GLKVector3Make( giftSize,        -giftSize,        -giftSize + step);
-        gloomies.individuals[i + (gloomiesPerSide * 11)]->targetPosition = GLKVector3Make( giftSize,         giftSize,        -giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide *  4)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y + giftSize,        t.z - giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  5)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y - giftSize,        t.z - giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  6)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize + step, t.z - giftSize);
+        gloomies.individuals[i + (gloomiesPerSide *  7)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize + step, t.z - giftSize);
+
+        gloomies.individuals[i + (gloomiesPerSide *  8)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize,        t.z - giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide *  9)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y + giftSize,        t.z - giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide * 10)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize,        t.z - giftSize + step);
+        gloomies.individuals[i + (gloomiesPerSide * 11)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y + giftSize,        t.z - giftSize + step);
+    }
+}
+
+- (void)setGloomiesTargetArrow {
+    int arrowLineCount = gloomies.individualsCount * 2 / 3;
+    int arrowHeadCount = (gloomies.individualsCount - arrowLineCount) / 2;
+
+    if (GLKVector3AllEqualToScalar(arrowCenter, 0.0f)) {
+        arrowCenter = gloomies.averagePosition;
+    }
+    
+    GLKVector3 dir = GLKVector3Subtract(arrowCenter, gloomies.targetPosition);
+    float len = sqrtf((dir.x * dir.x) +
+                      (dir.y * dir.y) +
+                      (dir.z * dir.z));
+    if (len <= 0.0f) {
+        return;
+    }
+    dir.x /= len;
+    dir.y /= len;
+    dir.z /= len;
+
+    for (int i = 0; i < arrowLineCount; i++) {
+        float t = ((float)i / (float)arrowLineCount) - 0.5f;
+        gloomies.individuals[i]->targetPosition = GLKVector3Make(arrowCenter.x + (dir.x * t), arrowCenter.y + (dir.y * t), arrowCenter.z);
     }
 }
 
@@ -404,6 +609,13 @@ typedef struct {
     return sqrtf((gloomies.averagePosition.x * gloomies.averagePosition.x) +
                  (gloomies.averagePosition.y * gloomies.averagePosition.y) +
                  (gloomies.averagePosition.z * gloomies.averagePosition.z));
+}
+
+- (float)gloomiesDistanceToTarget {
+    GLKVector3 d = GLKVector3Subtract(gloomies.averagePosition, gloomies.targetPosition);
+    return sqrtf((d.x * d.x) +
+                 (d.y * d.y) +
+                 (d.z * d.z));
 }
 
 - (GLKVector3)translatePoint:(GLKVector3)p fromModelViewMatrix:(GLKMatrix4)modelViewMatrix toInverseModelViewMatrix:(GLKMatrix4)inverseModelViewMatrix {
@@ -445,7 +657,7 @@ typedef struct {
         GLKMatrix4 m_modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, [self scaleAndTranslateModelView:[self snowflakeModelViewMatrix:modelViewMatrix index:i]]);
         glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
     
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
     
     // ----
@@ -487,7 +699,7 @@ typedef struct {
         GLKMatrix4 m_modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, [self scaleAndTranslateModelView:[self gloomieModelViewMatrix:modelViewMatrix position:gloomies.individuals[i]->position]]);
         glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
         
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
     
     // ----
@@ -522,7 +734,7 @@ typedef struct {
     glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 3));
     
     for (int i = 0; i < treeGloomiesCount; i++) {
-        glUniform1f(textureAlpha, treeGloomieAlpha * MAX(0.0f, MIN(1.0f, cosf((treeAnimation * 2.5f) + (i * 2.0f)) + 1.5f)));
+        glUniform1f(textureAlpha, treeGloomieAlpha * MAX(0.0f, MIN(1.0f, cosf((animation * 2.5f) + (i * 2.0f)) + 1.5f)));
 
         GLKMatrix4 modelViewMatrix1 = GLKMatrix4Translate(modelViewMatrix, treeGloomiesTranslation[i].x, treeGloomiesTranslation[i].y, treeGloomiesTranslation[i].z);
         modelViewMatrix1 = [self billboardMatrix:modelViewMatrix1];
@@ -532,7 +744,7 @@ typedef struct {
         GLKMatrix4 m_modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, modelViewMatrix1);
         glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
     
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
     // ---
@@ -541,6 +753,54 @@ typedef struct {
 
 	glEnable(GL_ALPHA_TEST);
     glDepthMask(true);
+}
+
+- (void)drawGiftWithProjectionMatrix:(GLKMatrix4)projectionMatrix {
+    GLKMatrix4 modelViewMatrix = gloomiesModelViewMatrix;
+    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix,
+                                          gloomies.averagePosition.x,
+                                          gloomies.averagePosition.y,
+                                          gloomies.averagePosition.z);
+    [self drawGiftWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+    
+}
+
+- (void)drawGiftWithModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
+    [self drawGift:giftNumber withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+}
+
+- (void)drawGift:(int)objectIndex withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+	glBindVertexArrayOES(m_giftVertexArray);
+    
+	glUseProgram(m_shaderProgram);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, giftTexture[objectIndex].name);
+    glUniform1i(textureSampler, 0);
+    
+    glUniform1f(textureAlpha, 1.0f);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, m_giftVertexBuffer);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(0));
+    
+    glEnableVertexAttribArray(ATTRIB_TEXCOORDS);
+    glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 3));
+    
+    // ---
+    GLKMatrix4 m_modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, [self scaleAndTranslateModelView:modelViewMatrix]);
+	glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
+    
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // ----
+    
+    glDisableVertexAttribArray(ATTRIB_VERTEX);
+	glDisableVertexAttribArray(ATTRIB_TEXCOORDS);
 }
 
 - (void)drawObject:(int)objectIndex withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
@@ -574,7 +834,7 @@ typedef struct {
     GLKMatrix4 m_modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, [self scaleAndTranslateModelView:modelViewMatrix]);
 	glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
     
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
     // ----
     
     glDisableVertexAttribArray(ATTRIB_VERTEX);

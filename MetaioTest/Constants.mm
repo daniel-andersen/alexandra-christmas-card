@@ -29,7 +29,7 @@ Constants *constantsInstance = nil;
 }
 
 - (void)initialize {
-    self.gloomiesCount = 64;
+    self.gloomiesCount = 72;
 
     self.gloomiesRenderSize = 0.2f;
     

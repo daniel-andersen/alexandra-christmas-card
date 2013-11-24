@@ -19,16 +19,23 @@
 
 #define RESET_TRACKING_DELAY 3.0f
 
-#define VIEWING_TREE_TIME 10.0f
+#define VIEWING_TREE_TIME 6.0f
+#define VIEWING_GIFT_TIME 4.0f
+#define VIEWING_ARROW_TIME 10.0f
+#define SEEKING_OBJECT_DELAY 3.0f
+#define SEEKING_OBJECT_TIMEOUT 30.0f
 
 metaio::IMetaioSDKIOS *m_pMetaioSDK;
 
 enum State {
-    ViewingTree      = 0,
-    ShowingGift      = 1,
-    ShowingArrow     = 2,
-    BeingGuided      = 3,
-    SeekingObject    = 4
+    ViewingTree        = 0,
+    ShowingGift        = 1,
+    ShowingArrow       = 2,
+    StartSeekingObject = 3,
+    SeekingObject      = 4,
+    Seeking2DObject    = 5,
+    ViewingObject      = 6,
+    BringingObjectHome = 7,
 };
     
 @interface MainViewController () {
@@ -43,7 +50,7 @@ enum State {
     State state;
     CFTimeInterval stateStartTime;
     
-    NSString *treeFilename;
+    NSString *trackingFilename;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -80,7 +87,7 @@ enum State {
 	[super viewDidLoad];
 
 	state = ViewingTree;
-    treeFilename = nil;
+    trackingFilename = nil;
     
 	self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
@@ -103,6 +110,7 @@ enum State {
 
 	[self initMetaioSDK];
     [self startViewingTree];
+    //[self startSeekingObject];
     
 	m_pCameraImageRenderer = [[CameraImageRenderer alloc] init];
 }
@@ -244,6 +252,33 @@ enum State {
 - (void)update {
     m_pMetaioSDK->requestCameraImage();
     m_pMetaioSDK->render();
+
+    metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
+    if (state == ViewingTree) {
+        if (!m_SDKReady || trackingValues.quality <= 0) {
+            stateStartTime = CFAbsoluteTimeGetCurrent();
+        }
+    }
+
+    if (state == ViewingTree && CFAbsoluteTimeGetCurrent() > stateStartTime + VIEWING_TREE_TIME) {
+        [self startShowingGift];
+    }
+    if (state == ShowingGift && CFAbsoluteTimeGetCurrent() > stateStartTime + VIEWING_GIFT_TIME) {
+        //[self startShowingArrow];
+        [self startSeekingObject];
+    }
+    if (state == ShowingArrow && CFAbsoluteTimeGetCurrent() > stateStartTime + VIEWING_ARROW_TIME) {
+        [self startSeekingObject];
+    }
+    if (state == StartSeekingObject && CFAbsoluteTimeGetCurrent() > stateStartTime + SEEKING_OBJECT_DELAY) {
+        [self doSeekObject];
+    }
+    if (state == SeekingObject && CFAbsoluteTimeGetCurrent() > stateStartTime + SEEKING_OBJECT_TIMEOUT) {
+        [self doSeek2DObject];
+    }
+    if (state == ViewingObject && m_pScene.distanceToTrackedObject < 250.0f) {
+        [self startBringingObjectHome];
+    }
     
     [self updateGloomiesTarget];
 
@@ -251,17 +286,46 @@ enum State {
 }
 
 - (void)updateGloomiesTarget {
-    if (state != ViewingTree && state != ShowingGift) {
-        return;
+    int gloomiesTarget = GLOOMIES_TARGET_NONE;
+    bool trackingTree = NO;
+    switch (state) {
+        case ViewingTree:
+            gloomiesTarget = GLOOMIES_TARGET_TREE;
+            trackingTree = YES;
+            break;
+        case ShowingGift:
+            gloomiesTarget = GLOOMIES_TARGET_GIFT;
+            trackingTree = YES;
+            break;
+        case ShowingArrow:
+            gloomiesTarget = GLOOMIES_TARGET_ARROW;
+            trackingTree = NO;
+            break;
+        case StartSeekingObject:
+        case SeekingObject:
+            gloomiesTarget = GLOOMIES_TARGET_SEEKING_OBJECT;
+            trackingTree = NO;
+            break;
+        case ViewingObject:
+            gloomiesTarget = GLOOMIES_TARGET_VIEWING_OBJECT;
+            trackingTree = YES;
+            break;
+        case BringingObjectHome:
+            gloomiesTarget = GLOOMIES_TARGET_BRINGING_OBJECT_HOME;
+            trackingTree = NO;
+            break;
+        default:
+            gloomiesTarget = GLOOMIES_TARGET_NONE;
+            trackingTree = NO;
+            break;
     }
     metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
-    
-    if (m_SDKReady && trackingValues.quality > 0) {
+    if (trackingTree && m_SDKReady && trackingValues.quality > 0) {
         float modelMatrix[16];
         m_pMetaioSDK->getTrackingValues(1, modelMatrix, false, true);
-        [m_pScene setGloomiesTargetWithTrackingValues:trackingValues modelViewMatrix:GLKMatrix4MakeWithArray(modelMatrix) deviceMotion:motionManager.deviceMotion targetMode:(state == ViewingTree ? GLOOMIES_TARGET_GIFT : GLOOMIES_TARGET_GIFT)];
+        [m_pScene setGloomiesTargetWithTrackingValues:trackingValues modelViewMatrix:GLKMatrix4MakeWithArray(modelMatrix) deviceMotion:motionManager.deviceMotion targetMode:gloomiesTarget];
     } else {
-        [m_pScene setGloomiesTargetWithDeviceMotion:motionManager.deviceMotion];
+        [m_pScene setGloomiesTargetWithDeviceMotion:motionManager.deviceMotion targetMode:gloomiesTarget];
     }
 }
 
@@ -272,6 +336,14 @@ enum State {
     projMatrix[5] *= m_pCameraImageRenderer.scaleY;
     GLKMatrix4 projectionMatrix = GLKMatrix4MakeWithArray(projMatrix);
 
+    metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
+    GLKMatrix4 modelViewMatrix = GLKMatrix4Identity;
+    if (m_SDKReady && trackingValues.quality > 0) {
+        float modelMatrix[16];
+        m_pMetaioSDK->getTrackingValues(1, modelMatrix, false, true);
+        modelViewMatrix = GLKMatrix4MakeWithArray(modelMatrix);
+    }
+
     // ---
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -281,9 +353,13 @@ enum State {
         case ViewingTree:
             [self drawTreeGloomies:projectionMatrix];
             break;
-        case BeingGuided:
+        case ViewingObject:
+            if (m_SDKReady && trackingValues.quality > 0) {
+                [m_pScene drawGiftWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+            }
             break;
-        case SeekingObject:
+        case BringingObjectHome:
+            [m_pScene drawGiftWithProjectionMatrix:projectionMatrix];
             break;
         default:
             break;
@@ -341,37 +417,51 @@ enum State {
     NSLog(@"INSTANT TRACKING EVENT");
     if(success) {
         NSLog(@"SUCCESS!");
-        switch (state) {
-            /*case SeekingTree:
-                treeFilename = file;
-                [self startViewingTree];
-                break;*/
-            case SeekingObject:
-                break;
-            default:
-                break;
-        }
+        trackingFilename = file;
+        [self startViewingObject];
     } else {
         [self resetTracking];
     }
 }
 
-- (void)startSeekingObject {
-    state = SeekingObject;
-    m_pMetaioSDK->startInstantTracking("INSTANT_3D_DRAWFEATURES=false_ANGLE=12");
-    [self performSelector:@selector(resetTracking) withObject:nil afterDelay:RESET_TRACKING_DELAY];
+- (void)startViewingObject {
+    NSLog(@"Start viewing object");
+    state = ViewingObject;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
+    m_pMetaioSDK->setTrackingConfiguration(std::string([trackingFilename UTF8String]));
+    [m_pScene startViewingObject];
 }
 
-- (void)startTrackingGuide {
-    state = BeingGuided;
+- (void)startSeekingObject {
+    NSLog(@"Start seeking object");
+    state = StartSeekingObject;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
+}
+
+- (void)doSeekObject {
+    state = SeekingObject;
+
+    m_pMetaioSDK->startInstantTracking("INSTANT_3D_DRAWFEATURES=false_ANGLE=12");
+    //[self performSelector:@selector(resetTracking) withObject:nil afterDelay:RESET_TRACKING_DELAY];
+}
+
+- (void)doSeek2DObject {
+    NSLog(@"Start seeking 2D object");
+    state = Seeking2DObject;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
+    
     m_pMetaioSDK->startInstantTracking("INSTANT_2D");
+    //[self performSelector:@selector(resetTracking) withObject:nil afterDelay:RESET_TRACKING_DELAY];
 }
 
 - (void)resetTracking {
     NSLog(@"Tracking reset!");
     switch (state) {
         case SeekingObject:
-            [self startSeekingObject];
+            [self doSeekObject];
+            break;
+        case Seeking2DObject:
+            [self doSeek2DObject];
             break;
         default:
             break;
@@ -382,7 +472,6 @@ enum State {
     state = ViewingTree;
     stateStartTime = CFAbsoluteTimeGetCurrent();
     
-    //m_pMetaioSDK->setTrackingConfiguration(std::string([treeFilename UTF8String]));
     NSString *trackingDataFile = [[NSBundle mainBundle] pathForResource:@"TrackingData_MarkerlessFast" ofType:@"xml" inDirectory:@"Assets"];
     if (trackingDataFile) {
         bool success = m_pMetaioSDK->setTrackingConfiguration([trackingDataFile UTF8String]);
@@ -392,6 +481,22 @@ enum State {
     } else {
         NSLog(@"Could not find tracking configuration file");
     }
+}
+
+- (void)startShowingGift {
+    state = ShowingGift;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
+}
+
+- (void)startShowingArrow {
+    state = ShowingArrow;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
+    [m_pScene startShowingArrow];
+}
+
+- (void)startBringingObjectHome {
+    state = BringingObjectHome;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
 }
 
 @end
