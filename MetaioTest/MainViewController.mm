@@ -36,6 +36,7 @@ enum State {
     Seeking2DObject    = 5,
     ViewingObject      = 6,
     BringingObjectHome = 7,
+    PlacingObject      = 8,
 };
     
 @interface MainViewController () {
@@ -260,7 +261,7 @@ enum State {
         }
     }
 
-    if (state == ViewingTree && CFAbsoluteTimeGetCurrent() > stateStartTime + VIEWING_TREE_TIME) {
+    if (state == ViewingTree && CFAbsoluteTimeGetCurrent() > stateStartTime + VIEWING_TREE_TIME && m_pScene.giftNumber < giftCount) {
         [self startShowingGift];
     }
     if (state == ShowingGift && CFAbsoluteTimeGetCurrent() > stateStartTime + VIEWING_GIFT_TIME) {
@@ -278,6 +279,13 @@ enum State {
     }
     if (state == ViewingObject && m_pScene.distanceToTrackedObject < 250.0f) {
         [self startBringingObjectHome];
+    }
+    if (state == BringingObjectHome && m_SDKReady && trackingValues.quality > 0 && CFAbsoluteTimeGetCurrent() > stateStartTime + 2.0f) {
+        [self startPlacingObject];
+    }
+    if (state == PlacingObject && [m_pScene gloomiesDistanceToTarget] < 10.0f) {
+        m_pScene.giftNumber++;
+        [self startViewingTree];
     }
     
     [self updateGloomiesTarget];
@@ -312,7 +320,11 @@ enum State {
             break;
         case BringingObjectHome:
             gloomiesTarget = GLOOMIES_TARGET_BRINGING_OBJECT_HOME;
-            trackingTree = NO;
+            trackingTree = YES;
+            break;
+        case PlacingObject:
+            gloomiesTarget = GLOOMIES_TARGET_PLACE_OBJECT;
+            trackingTree = YES;
             break;
         default:
             gloomiesTarget = GLOOMIES_TARGET_NONE;
@@ -352,6 +364,9 @@ enum State {
     switch (state) {
         case ViewingTree:
             [self drawTreeGloomies:projectionMatrix];
+            for (int i = 0; i < m_pScene.giftNumber; i++) {
+                [m_pScene drawGift:i withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+            }
             break;
         case ViewingObject:
             if (m_SDKReady && trackingValues.quality > 0) {
@@ -359,6 +374,7 @@ enum State {
             }
             break;
         case BringingObjectHome:
+        case PlacingObject:
             [m_pScene drawGiftWithProjectionMatrix:projectionMatrix];
             break;
         default:
@@ -469,21 +485,14 @@ enum State {
 }
 
 - (void)startViewingTree {
+    NSLog(@"Start viewing tree");
     state = ViewingTree;
     stateStartTime = CFAbsoluteTimeGetCurrent();
-    
-    NSString *trackingDataFile = [[NSBundle mainBundle] pathForResource:@"TrackingData_MarkerlessFast" ofType:@"xml" inDirectory:@"Assets"];
-    if (trackingDataFile) {
-        bool success = m_pMetaioSDK->setTrackingConfiguration([trackingDataFile UTF8String]);
-        if (!success) {
-            NSLog(@"Failed to load tracking configuration");
-        }
-    } else {
-        NSLog(@"Could not find tracking configuration file");
-    }
+    [self startTrackingTree];
 }
 
 - (void)startShowingGift {
+    NSLog(@"Start showing gift");
     state = ShowingGift;
     stateStartTime = CFAbsoluteTimeGetCurrent();
 }
@@ -495,8 +504,28 @@ enum State {
 }
 
 - (void)startBringingObjectHome {
+    NSLog(@"Start bringing object home");
     state = BringingObjectHome;
     stateStartTime = CFAbsoluteTimeGetCurrent();
+    [self startTrackingTree];
+}
+
+- (void)startPlacingObject {
+    NSLog(@"Start placing object");
+    state = PlacingObject;
+    stateStartTime = CFAbsoluteTimeGetCurrent();
+}
+
+- (void)startTrackingTree {
+    NSString *trackingDataFile = [[NSBundle mainBundle] pathForResource:@"TrackingData_MarkerlessFast" ofType:@"xml" inDirectory:@"Assets"];
+    if (trackingDataFile) {
+        bool success = m_pMetaioSDK->setTrackingConfiguration([trackingDataFile UTF8String]);
+        if (!success) {
+            NSLog(@"Failed to load tracking configuration");
+        }
+    } else {
+        NSLog(@"Could not find tracking configuration file");
+    }
 }
 
 @end

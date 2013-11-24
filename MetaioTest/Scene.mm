@@ -39,7 +39,6 @@ const float treeWidth = 150.0f;
 const float treeHeight = 300.0f;
 const float treeYOffset = 20.0f;
 
-const int giftCount = 4;
 const float giftSize = 20.0f;
 GLKVector3 giftPosition[giftCount];
 
@@ -201,8 +200,6 @@ typedef struct {
     float animation;
     int gloomiesTargetMode;
     
-    int giftNumber;
-    
     GLKVector3 arrowCenter;
 
     GLKVector3 seekingSlowSource;
@@ -321,12 +318,12 @@ typedef struct {
         treeGloomiesTranslation[11] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 3.0f) height:(treeHeight * 1.0f / 3.0f)]; treeGloomiesScale[11] = 0.75f;
         treeGloomiesTranslation[12] = [self treeGloomieOffsetFromAngle:(M_PI_2 * 3.0f) height:(treeHeight * 2.0f / 3.0f)]; treeGloomiesScale[12] = 0.75f;
 
-        giftPosition[0] = GLKVector3Make( 200.0f,  100.0f, treeYOffset);
-        giftPosition[1] = GLKVector3Make(  50.0f, -200.0f, treeYOffset);
-        giftPosition[2] = GLKVector3Make( 300.0f, -150.0f, treeYOffset);
-        giftPosition[3] = GLKVector3Make(-150.0f, -150.0f, treeYOffset);
+        giftPosition[0] = GLKVector3Make(  75.0f,   90.0f, 0.0f);
+        giftPosition[1] = GLKVector3Make(  50.0f,  -75.0f, 0.0f);
+        giftPosition[2] = GLKVector3Make( -90.0f,   40.0f, 0.0f);
+        giftPosition[3] = GLKVector3Make( -75.0f,  -50.0f, 0.0f);
         
-        giftNumber = 0;
+        self.giftNumber = 0;
         
         gloomies = [[Gloomies alloc] init];
 
@@ -496,6 +493,9 @@ typedef struct {
             } else if (gloomiesTargetMode == GLOOMIES_TARGET_VIEWING_OBJECT) {
                 gloomies.individualTargets = NO;
                 [self setGloomiesTargetObject];
+            } else if (gloomiesTargetMode == GLOOMIES_TARGET_PLACE_OBJECT) {
+                gloomies.individualTargets = NO;
+                [self setGloomiesTargetPlaceObject];
             }
         } else {
             gloomies.targetPosition = GLKVector3Make(0.0f, 0.0f, treeYOffset + (treeHeight / 2.0f));
@@ -509,7 +509,7 @@ typedef struct {
         } else if (gloomiesTargetMode == GLOOMIES_TARGET_BRINGING_OBJECT_HOME) {
             [self setGloomiesTargetBringingObjectHome];
         } else {
-            gloomies.targetPosition = GLKVector3Make(0.0f, 500.0f, 0.0f);
+            [self setGloomiesTargetScreen];
         }
     }
 }
@@ -545,7 +545,15 @@ typedef struct {
     }
 }
 
+- (void)setGloomiesTargetPlaceObject {
+    gloomies.targetPosition = giftPosition[self.giftNumber];
+}
+
 - (void)setGloomiesTargetBringingObjectHome {
+    [self setGloomiesTargetScreen];
+}
+
+- (void)setGloomiesTargetScreen {
     GLKMatrix4 inverseMatrix = [self invertMatrix:gloomiesModelViewMatrix];
     GLKVector4 p = GLKMatrix4MultiplyVector4(inverseMatrix, GLKVector4Make(0.0f, 0.0f, -300.0f, 1.0f));
     gloomies.targetPosition = GLKVector3Make(p.x, p.y, p.z);
@@ -556,27 +564,33 @@ typedef struct {
 }
 
 - (void)setGloomiesTargetGift {
-    int gloomiesPerSide = gloomies.individualsCount / 12;
+    int count = giftCount - self.giftNumber;
+    int gloomiesPerSide = gloomies.individualsCount / 12 / count;
     float stepSize = (giftSize * 2.0f) / (float)gloomiesPerSide;
-    GLKVector3 t = giftPosition[giftNumber];
 
-    for (int i = 0; i < gloomiesPerSide; i++) {
-        float step = (float)i * stepSize;
+    for (int j = 0; j < count; j++) {
+        GLKVector3 t = giftPosition[j];
 
-        gloomies.individuals[i + (gloomiesPerSide *  0)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y + giftSize,        t.z + giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  1)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y - giftSize,        t.z + giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  2)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize + step, t.z + giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  3)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize + step, t.z + giftSize);
+        for (int i = 0; i < gloomiesPerSide; i++) {
+            float step = (float)i * stepSize;
 
-        gloomies.individuals[i + (gloomiesPerSide *  4)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y + giftSize,        t.z - giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  5)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y - giftSize,        t.z - giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  6)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize + step, t.z - giftSize);
-        gloomies.individuals[i + (gloomiesPerSide *  7)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize + step, t.z - giftSize);
+            int off = i + (j * gloomiesPerSide * 12);
+            
+            gloomies.individuals[off + (gloomiesPerSide *  0)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y + giftSize,        t.z + giftSize);
+            gloomies.individuals[off + (gloomiesPerSide *  1)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y - giftSize,        t.z + giftSize);
+            gloomies.individuals[off + (gloomiesPerSide *  2)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize + step, t.z + giftSize);
+            gloomies.individuals[off + (gloomiesPerSide *  3)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize + step, t.z + giftSize);
 
-        gloomies.individuals[i + (gloomiesPerSide *  8)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize,        t.z - giftSize + step);
-        gloomies.individuals[i + (gloomiesPerSide *  9)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y + giftSize,        t.z - giftSize + step);
-        gloomies.individuals[i + (gloomiesPerSide * 10)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize,        t.z - giftSize + step);
-        gloomies.individuals[i + (gloomiesPerSide * 11)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y + giftSize,        t.z - giftSize + step);
+            gloomies.individuals[off + (gloomiesPerSide *  4)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y + giftSize,        t.z - giftSize);
+            gloomies.individuals[off + (gloomiesPerSide *  5)]->targetPosition = GLKVector3Make(t.x - giftSize + step, t.y - giftSize,        t.z - giftSize);
+            gloomies.individuals[off + (gloomiesPerSide *  6)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize + step, t.z - giftSize);
+            gloomies.individuals[off + (gloomiesPerSide *  7)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize + step, t.z - giftSize);
+
+            gloomies.individuals[off + (gloomiesPerSide *  8)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y - giftSize,        t.z - giftSize + step);
+            gloomies.individuals[off + (gloomiesPerSide *  9)]->targetPosition = GLKVector3Make(t.x - giftSize,        t.y + giftSize,        t.z - giftSize + step);
+            gloomies.individuals[off + (gloomiesPerSide * 10)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y - giftSize,        t.z - giftSize + step);
+            gloomies.individuals[off + (gloomiesPerSide * 11)]->targetPosition = GLKVector3Make(t.x + giftSize,        t.y + giftSize,        t.z - giftSize + step);
+        }
     }
 }
 
@@ -760,16 +774,24 @@ typedef struct {
     modelViewMatrix = GLKMatrix4Translate(modelViewMatrix,
                                           gloomies.averagePosition.x,
                                           gloomies.averagePosition.y,
-                                          gloomies.averagePosition.z);
+                                          gloomies.averagePosition.z - 40.0f);
     [self drawGiftWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
     
 }
 
 - (void)drawGiftWithModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
-    [self drawGift:giftNumber withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+    [self drawGift2:self.giftNumber withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
 }
 
-- (void)drawGift:(int)objectIndex withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
+- (void)drawGift:(int)index withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
+    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix,
+                                          giftPosition[index].x,
+                                          giftPosition[index].y,
+                                          giftPosition[index].z);
+    [self drawGift2:index withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
+}
+
+- (void)drawGift2:(int)index withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
@@ -778,7 +800,7 @@ typedef struct {
 	glUseProgram(m_shaderProgram);
     
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, giftTexture[objectIndex].name);
+    glBindTexture(GL_TEXTURE_2D, giftTexture[index].name);
     glUniform1i(textureSampler, 0);
     
     glUniform1f(textureAlpha, 1.0f);

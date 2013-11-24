@@ -7,6 +7,7 @@
 #define __SCENE_H__
 
 #define OBJECT_COUNT 1
+#define giftCount 4
 
 #define OBJECT_SNOWMAN 0
 
@@ -17,6 +18,7 @@
 #define GLOOMIES_TARGET_SEEKING_OBJECT 4
 #define GLOOMIES_TARGET_VIEWING_OBJECT 5
 #define GLOOMIES_TARGET_BRINGING_OBJECT_HOME 6
+#define GLOOMIES_TARGET_PLACE_OBJECT 7
 
 #endif
 
@@ -28,12 +30,15 @@
 - (void)startShowingArrow;
 - (void)startViewingObject;
 
+- (float)gloomiesDistanceToTarget;
+
 - (void)randomGloomiesDestinationAwayFromCamera;
 
 - (void)update:(CMDeviceMotion *)deviceMotion;
 
 - (void)drawTreeGloomiesWithModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix;
 - (void)drawObject:(int)objectIndex withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix;
+- (void)drawGift:(int)index withModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix;
 - (void)drawGiftWithModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix;
 - (void)drawGiftWithProjectionMatrix:(GLKMatrix4)projectionMatrix;
 
@@ -42,5 +47,6 @@
 
 @property (nonatomic) float cameraAlpha;
 @property (nonatomic) float distanceToTrackedObject;
+@property (nonatomic) int giftNumber;
 
 @end
