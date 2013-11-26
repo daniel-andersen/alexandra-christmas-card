@@ -20,6 +20,12 @@
 #define GLOOMIES_TARGET_BRINGING_OBJECT_HOME 6
 #define GLOOMIES_TARGET_PLACE_OBJECT 7
 
+#define VIEWING_TREE_TIME 6.0f
+#define VIEWING_GIFT_TIME 4.0f
+#define VIEWING_ARROW_TIME 10.0f
+#define SEEKING_OBJECT_DELAY 3.0f
+#define SEEKING_OBJECT_TIMEOUT 30.0f
+
 #endif
 
 @interface Scene : NSObject
@@ -28,6 +34,7 @@
 - (void)setGloomiesTargetWithDeviceMotion:(CMDeviceMotion *)deviceMotion targetMode:(int)targetMode;
 
 - (void)startShowingArrow;
+- (void)startShowingGift;
 - (void)startViewingObject;
 
 - (float)gloomiesDistanceToTarget;

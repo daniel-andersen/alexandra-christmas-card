@@ -19,12 +19,6 @@
 
 #define RESET_TRACKING_DELAY 3.0f
 
-#define VIEWING_TREE_TIME 6.0f
-#define VIEWING_GIFT_TIME 4.0f
-#define VIEWING_ARROW_TIME 10.0f
-#define SEEKING_OBJECT_DELAY 3.0f
-#define SEEKING_OBJECT_TIMEOUT 30.0f
-
 metaio::IMetaioSDKIOS *m_pMetaioSDK;
 
 enum State {
@@ -363,6 +357,7 @@ enum State {
     [self drawCameraImage:rect];
     switch (state) {
         case ViewingTree:
+        case ShowingGift:
             [self drawTreeGloomies:projectionMatrix];
             for (int i = 0; i < m_pScene.giftNumber; i++) {
                 [m_pScene drawGift:i withModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
@@ -495,6 +490,7 @@ enum State {
     NSLog(@"Start showing gift");
     state = ShowingGift;
     stateStartTime = CFAbsoluteTimeGetCurrent();
+    [m_pScene startShowingGift];
 }
 
 - (void)startShowingArrow {
