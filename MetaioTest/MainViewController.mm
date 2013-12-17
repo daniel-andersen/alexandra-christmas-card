@@ -1,6 +1,6 @@
 // Define your license here. For more information, please visit http://dev.metaio.com - you can add
 // a new application at http://dev.metaio.com/get-developer-key/
-#define SDK_LICENSE "k9r8rzscv1FSaUictM5ZE/be3jxbpyyCVl/h7edHHUk="
+#define SDK_LICENSE "0sIC0zZKT85pYgQQOLio5hAlGuix+rHUi8VoU3Z+zXE="
 #if !defined (SDK_LICENSE)
 #error Please provide the license string for your application
 #endif
@@ -11,6 +11,7 @@
 #endif
 
 #import <CoreMotion/CoreMotion.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 #import "CameraImageRenderer.h"
 #import "Scene.h"
@@ -46,6 +47,9 @@ enum State {
     CFTimeInterval stateStartTime;
     
     NSString *trackingFilename;
+    
+    bool savedToCameraRoll;
+    CFAbsoluteTime startShowingInfoTime;
 }
 @property (strong, nonatomic) EAGLContext *context;
 
@@ -94,7 +98,7 @@ enum State {
 	view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
 	
 	[self setupGL];
-    
+
 	// Listen to app pause/resume events because in those events we have to pause/resume the SDK
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onApplicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onApplicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -102,6 +106,19 @@ enum State {
     motionManager = [[CMMotionManager alloc] init];
     motionManager.deviceMotionUpdateInterval = 0.01f;
     [motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical];
+
+    savedToCameraRoll = NO;
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"trackingImageSavedToCameraRoll"] == nil) {
+        savedToCameraRoll = YES;
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        UIImage *image = [UIImage imageNamed:@"Images/track.png"];
+        [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)image.imageOrientation completionBlock:^(NSURL *assetURL, NSError *error) {
+            NSLog(@"Saved photo? %@", error != nil ? @"NO" : @"YES");
+        }];
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"trackingImageSavedToCameraRoll"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        startShowingInfoTime = CFAbsoluteTimeGetCurrent();
+    }
 
 	[self initMetaioSDK];
     [self startViewingTree];
@@ -247,7 +264,7 @@ enum State {
 - (void)update {
     m_pMetaioSDK->requestCameraImage();
     m_pMetaioSDK->render();
-
+    
     metaio::TrackingValues trackingValues = m_pMetaioSDK->getTrackingValues(1);
     if (state == ViewingTree) {
         if (!m_SDKReady || trackingValues.quality <= 0) {
@@ -374,6 +391,9 @@ enum State {
             break;
         default:
             break;
+    }
+    if (savedToCameraRoll && CFAbsoluteTimeGetCurrent() < startShowingInfoTime + 10.0f) {
+        [m_pScene drawInfoWithProjectionMatrix:projectionMatrix];
     }
     [self drawGloomies:projectionMatrix];
     [self drawSnow:projectionMatrix];

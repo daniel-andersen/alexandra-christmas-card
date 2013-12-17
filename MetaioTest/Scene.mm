@@ -13,8 +13,8 @@ extern metaio::IMetaioSDKIOS *m_pMetaioSDK;
 const float snowflakesMaxXZ = 500.0f;
 const float snowflakesMaxY = 500.0f;
 
-const float objectScaleX = 1.5f;
-const float objectScaleY = 1.5f;
+const float objectScaleX = 2.5f;
+const float objectScaleY = 2.5f;
 
 const float treeScaleX = 2.0f;
 const float treeScaleY = 2.0f;
@@ -28,7 +28,7 @@ const float gloomieScaleY = 0.3f;
 const float treeGloomieScaleX = 1.5f;
 const float treeGloomieScaleY = 1.5f;
 
-const float giftScale = 0.5f;
+const float giftScale = 0.35f;
 
 const int treeGloomiesCount = 13;
 
@@ -186,6 +186,7 @@ typedef struct {
     GLKTextureInfo *snowflakeTexture;
     GLKTextureInfo *gloomieTexture;
     GLKTextureInfo *treeGloomieTexture;
+    GLKTextureInfo *infoTexture;
 
     GLuint textureSampler;
     GLuint textureAlpha;
@@ -295,10 +296,10 @@ typedef struct {
         textureSampler = glGetUniformLocation(m_shaderProgram, "texture");
         textureAlpha = glGetUniformLocation(m_shaderProgram, "alpha");
 
-        objectTexture[0] = [self setupTexture:@"Images/snowman.png"];
         treeGloomieTexture = [self setupTexture:@"Images/tree_gloomie.png"];
         snowflakeTexture = [self setupTexture:@"Images/snowflake.png"];
         gloomieTexture = [self setupTexture:@"Images/gloomie.png"];
+        infoTexture = [self setupTexture:@"Images/info.png"];
         for (int i = 0; i < giftCount; i++) {
             giftTexture[i] = [self setupTexture:[NSString stringWithFormat:@"Images/gift%i.png", i + 1]];
         }
@@ -566,7 +567,7 @@ typedef struct {
 
 - (void)setGloomiesTargetScreen {
     GLKMatrix4 inverseMatrix = [self invertMatrix:gloomiesModelViewMatrix];
-    GLKVector4 p = GLKMatrix4MultiplyVector4(inverseMatrix, GLKVector4Make(0.0f, 0.0f, -300.0f, 1.0f));
+    GLKVector4 p = GLKMatrix4MultiplyVector4(inverseMatrix, GLKVector4Make(0.0f, 0.0f, -500.0f, 1.0f));
     gloomies.targetPosition = GLKVector3Make(p.x, p.y, p.z);
 }
 
@@ -777,6 +778,47 @@ typedef struct {
     glDepthMask(true);
 }
 
+- (void)drawInfoWithProjectionMatrix:(GLKMatrix4)projectionMatrix {
+    GLKMatrix4 modelViewMatrix = gloomiesModelViewMatrix;
+    modelViewMatrix = GLKMatrix4Translate(modelViewMatrix,
+                                          gloomies.averagePosition.x,
+                                          gloomies.averagePosition.y,
+                                          gloomies.averagePosition.z - 40.0f);
+    modelViewMatrix = [self billboardMatrix:modelViewMatrix];
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    
+	glBindVertexArrayOES(m_objectVertexArray);
+    
+	glUseProgram(m_shaderProgram);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, infoTexture.name);
+    glUniform1i(textureSampler, 0);
+    
+    glUniform1f(textureAlpha, 1.0f);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, m_objectVertexBuffer);
+    
+    glEnableVertexAttribArray(ATTRIB_VERTEX);
+    glVertexAttribPointer(ATTRIB_VERTEX, 3, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(0));
+    
+    glEnableVertexAttribArray(ATTRIB_TEXCOORDS);
+    glVertexAttribPointer(ATTRIB_TEXCOORDS, 2, GL_FLOAT, GL_TRUE, sizeof(Vertex), BUFFER_OFFSET(sizeof(float) * 3));
+    
+    // ---
+    GLKMatrix4 m_modelViewProjectionMatrix = GLKMatrix4Multiply(projectionMatrix, [self scaleAndTranslateModelView:modelViewMatrix]);
+	glUniformMatrix4fv(uniforms[UNIFORM_MODELVIEWPROJECTION_MATRIX], 1, 0, m_modelViewProjectionMatrix.m);
+    
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+    
+    // ----
+    
+    glDisableVertexAttribArray(ATTRIB_VERTEX);
+	glDisableVertexAttribArray(ATTRIB_TEXCOORDS);
+}
+
 - (void)drawGiftWithProjectionMatrix:(GLKMatrix4)projectionMatrix {
     GLKMatrix4 modelViewMatrix = gloomiesModelViewMatrix;
     modelViewMatrix = GLKMatrix4Translate(modelViewMatrix,
@@ -784,7 +826,6 @@ typedef struct {
                                           gloomies.averagePosition.y,
                                           gloomies.averagePosition.z - 40.0f);
     [self drawGiftWithModelViewMatrix:modelViewMatrix projectionMatrix:projectionMatrix];
-    
 }
 
 - (void)drawGiftWithModelViewMatrix:(GLKMatrix4)modelViewMatrix projectionMatrix:(GLKMatrix4)projectionMatrix {

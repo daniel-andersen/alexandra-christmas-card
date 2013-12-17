@@ -45,6 +45,7 @@
 		651F26E4182A6B2A00889138 /* Gloomies.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F26E3182A6B2A00889138 /* Gloomies.mm */; };
 		651F26E7182A6B4E00889138 /* Constants.mm in Sources */ = {isa = PBXBuildFile; fileRef = 651F26E6182A6B4E00889138 /* Constants.mm */; };
 		651F26EA182CFB9C00889138 /* Images in Resources */ = {isa = PBXBuildFile; fileRef = 651F26E9182CFB9C00889138 /* Images */; };
+		654132FC186087CC00238A85 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 654132FB186087CC00238A85 /* AssetsLibrary.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,14 +59,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		651F2672182A600000889138 /* MetaioTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaioTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		651F2672182A600000889138 /* Gloomies.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gloomies.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		651F2675182A600000889138 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		651F2677182A600000889138 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		651F2679182A600000889138 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		651F267D182A600000889138 /* MetaioTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MetaioTest-Info.plist"; sourceTree = "<group>"; };
+		651F267D182A600000889138 /* Gloomies-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Gloomies-Info.plist"; sourceTree = "<group>"; };
 		651F267F182A600000889138 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		651F2681182A600000889138 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		651F2683182A600000889138 /* MetaioTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MetaioTest-Prefix.pch"; sourceTree = "<group>"; };
+		651F2683182A600000889138 /* Gloomies-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Gloomies-Prefix.pch"; sourceTree = "<group>"; };
 		651F2684182A600000889138 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		651F2685182A600000889138 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		651F2688182A600000889138 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -73,9 +74,9 @@
 		651F268D182A600000889138 /* MainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		651F268E182A600000889138 /* MainViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		651F2690182A600000889138 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		651F2696182A600000889138 /* MetaioTestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaioTestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		651F2696182A600000889138 /* GloomiesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GloomiesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		651F2697182A600000889138 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		651F269F182A600000889138 /* MetaioTestTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MetaioTestTests-Info.plist"; sourceTree = "<group>"; };
+		651F269F182A600000889138 /* GloomiesTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GloomiesTests-Info.plist"; sourceTree = "<group>"; };
 		651F26A1182A600000889138 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		651F26A3182A600000889138 /* MetaioTestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetaioTestTests.m; sourceTree = "<group>"; };
 		651F26AD182A60BA00889138 /* metaioSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = metaioSDK.framework; sourceTree = "<group>"; };
@@ -105,6 +106,7 @@
 		651F26E5182A6B4E00889138 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		651F26E6182A6B4E00889138 /* Constants.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Constants.mm; sourceTree = "<group>"; };
 		651F26E9182CFB9C00889138 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		654132FB186087CC00238A85 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				654132FC186087CC00238A85 /* AssetsLibrary.framework in Frameworks */,
 				651F26CC182A687900889138 /* CoreLocation.framework in Frameworks */,
 				651F26CA182A685B00889138 /* libxml2.dylib in Frameworks */,
 				651F26C8182A684A00889138 /* libz.dylib in Frameworks */,
@@ -157,8 +160,8 @@
 		651F2673182A600000889138 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				651F2672182A600000889138 /* MetaioTest.app */,
-				651F2696182A600000889138 /* MetaioTestTests.xctest */,
+				651F2672182A600000889138 /* Gloomies.app */,
+				651F2696182A600000889138 /* GloomiesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -166,6 +169,7 @@
 		651F2674182A600000889138 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				654132FB186087CC00238A85 /* AssetsLibrary.framework */,
 				651F26CB182A687900889138 /* CoreLocation.framework */,
 				651F26C9182A685B00889138 /* libxml2.dylib */,
 				651F26C7182A684A00889138 /* libz.dylib */,
@@ -215,10 +219,10 @@
 		651F267C182A600000889138 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				651F267D182A600000889138 /* MetaioTest-Info.plist */,
+				651F267D182A600000889138 /* Gloomies-Info.plist */,
 				651F267E182A600000889138 /* InfoPlist.strings */,
 				651F2681182A600000889138 /* main.m */,
-				651F2683182A600000889138 /* MetaioTest-Prefix.pch */,
+				651F2683182A600000889138 /* Gloomies-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -235,7 +239,7 @@
 		651F269E182A600000889138 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				651F269F182A600000889138 /* MetaioTestTests-Info.plist */,
+				651F269F182A600000889138 /* GloomiesTests-Info.plist */,
 				651F26A0182A600000889138 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -264,9 +268,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		651F2671182A600000889138 /* MetaioTest */ = {
+		651F2671182A600000889138 /* Gloomies */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 651F26A7182A600000889138 /* Build configuration list for PBXNativeTarget "MetaioTest" */;
+			buildConfigurationList = 651F26A7182A600000889138 /* Build configuration list for PBXNativeTarget "Gloomies" */;
 			buildPhases = (
 				651F266E182A600000889138 /* Sources */,
 				651F266F182A600000889138 /* Frameworks */,
@@ -276,14 +280,14 @@
 			);
 			dependencies = (
 			);
-			name = MetaioTest;
+			name = Gloomies;
 			productName = MetaioTest;
-			productReference = 651F2672182A600000889138 /* MetaioTest.app */;
+			productReference = 651F2672182A600000889138 /* Gloomies.app */;
 			productType = "com.apple.product-type.application";
 		};
-		651F2695182A600000889138 /* MetaioTestTests */ = {
+		651F2695182A600000889138 /* GloomiesTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 651F26AA182A600000889138 /* Build configuration list for PBXNativeTarget "MetaioTestTests" */;
+			buildConfigurationList = 651F26AA182A600000889138 /* Build configuration list for PBXNativeTarget "GloomiesTests" */;
 			buildPhases = (
 				651F2692182A600000889138 /* Sources */,
 				651F2693182A600000889138 /* Frameworks */,
@@ -294,9 +298,9 @@
 			dependencies = (
 				651F269C182A600000889138 /* PBXTargetDependency */,
 			);
-			name = MetaioTestTests;
+			name = GloomiesTests;
 			productName = MetaioTestTests;
-			productReference = 651F2696182A600000889138 /* MetaioTestTests.xctest */;
+			productReference = 651F2696182A600000889138 /* GloomiesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -316,7 +320,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 651F266D182A600000889138 /* Build configuration list for PBXProject "MetaioTest" */;
+			buildConfigurationList = 651F266D182A600000889138 /* Build configuration list for PBXProject "Gloomies" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -329,8 +333,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				651F2671182A600000889138 /* MetaioTest */,
-				651F2695182A600000889138 /* MetaioTestTests */,
+				651F2671182A600000889138 /* Gloomies */,
+				651F2695182A600000889138 /* GloomiesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -391,7 +395,7 @@
 /* Begin PBXTargetDependency section */
 		651F269C182A600000889138 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 651F2671182A600000889138 /* MetaioTest */;
+			target = 651F2671182A600000889138 /* Gloomies */;
 			targetProxy = 651F269B182A600000889138 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -509,6 +513,7 @@
 		651F26A8182A600000889138 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -521,10 +526,10 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MetaioTest/MetaioTest-Prefix.pch";
-				INFOPLIST_FILE = "MetaioTest/MetaioTest-Info.plist";
+				GCC_PREFIX_HEADER = "MetaioTest/Gloomies-Prefix.pch";
+				INFOPLIST_FILE = "MetaioTest/Gloomies-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Gloomies;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -533,6 +538,7 @@
 		651F26A9182A600000889138 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
@@ -545,10 +551,10 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MetaioTest/MetaioTest-Prefix.pch";
-				INFOPLIST_FILE = "MetaioTest/MetaioTest-Info.plist";
+				GCC_PREFIX_HEADER = "MetaioTest/Gloomies-Prefix.pch";
+				INFOPLIST_FILE = "MetaioTest/Gloomies-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Gloomies;
 				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
@@ -570,8 +576,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "MetaioTestTests/MetaioTestTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "MetaioTestTests/GloomiesTests-Info.plist";
+				PRODUCT_NAME = GloomiesTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -589,8 +595,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MetaioTest/MetaioTest-Prefix.pch";
-				INFOPLIST_FILE = "MetaioTestTests/MetaioTestTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "MetaioTestTests/GloomiesTests-Info.plist";
+				PRODUCT_NAME = GloomiesTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -599,7 +605,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		651F266D182A600000889138 /* Build configuration list for PBXProject "MetaioTest" */ = {
+		651F266D182A600000889138 /* Build configuration list for PBXProject "Gloomies" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				651F26A5182A600000889138 /* Debug */,
@@ -608,7 +614,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		651F26A7182A600000889138 /* Build configuration list for PBXNativeTarget "MetaioTest" */ = {
+		651F26A7182A600000889138 /* Build configuration list for PBXNativeTarget "Gloomies" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				651F26A8182A600000889138 /* Debug */,
@@ -617,7 +623,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		651F26AA182A600000889138 /* Build configuration list for PBXNativeTarget "MetaioTestTests" */ = {
+		651F26AA182A600000889138 /* Build configuration list for PBXNativeTarget "GloomiesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				651F26AB182A600000889138 /* Debug */,
